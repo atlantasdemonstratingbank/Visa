@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Track Application — U.S. Visa Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#002868;--blue2:#003a99;--red:#BF0A30;--gold:#C9A84C;--white:#fff;--offwhite:#F0F4FA;--text:#1A1A2E;--muted:#5a6480;--border:#d0d8e8;--green:#1a6b3a;--amber:#9a6b00;--serif:'Source Serif 4',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'Roboto Mono',monospace;--radius:6px;--shadow:0 2px 16px rgba(0,40,104,.10)}
+body{font-family:var(--sans);color:var(--text);background:var(--offwhite);min-height:100vh}
+.gov-banner{background:#1a1a1a;color:#eee;font-size:12px;padding:5px 20px}
+nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.nav-brand strong{font-family:var(--serif);font-size:15px}
+.nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px}
+.nav-back:hover{color:#fff}
+
+.main{max-width:760px;margin:0 auto;padding:50px 20px 70px}
+.page-title{text-align:center;margin-bottom:36px}
+.page-title h1{font-family:var(--serif);font-size:30px;color:var(--blue);font-weight:700}
+.page-title p{color:var(--muted);font-size:14px;margin-top:8px}
+
+.search-card{background:#fff;border-radius:10px;padding:28px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:28px}
+.search-row{display:flex;gap:12px}
+.search-row input{flex:1;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:var(--mono);font-size:15px;letter-spacing:1px;outline:none}
+.search-row input:focus{border-color:var(--blue)}
+.search-row button{background:var(--blue);color:#fff;border:none;padding:14px 28px;border-radius:var(--radius);font-weight:600;cursor:pointer;font-size:14px;white-space:nowrap}
+.search-row button:hover{background:var(--blue2)}
+.search-hint{font-size:12px;color:var(--muted);margin-top:10px}
+
+#resultArea{display:none}
+.result-card{background:#fff;border-radius:10px;padding:32px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.result-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.result-ref{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.result-name{font-family:var(--serif);font-size:22px;color:var(--blue);font-weight:700;margin-top:4px}
+.status-pill{padding:8px 18px;border-radius:30px;font-size:13px;font-weight:700;letter-spacing:.3px}
+.status-pending_payment{background:#fff3cd;color:var(--amber)}
+.status-payment_received{background:#d4edff;color:var(--blue)}
+.status-biometric_scheduled{background:#e0d4ff;color:#5a2a9e}
+.status-under_review{background:#ffe4d4;color:#a0440a}
+.status-approved{background:#d4f5dd;color:var(--green)}
+.status-denied{background:#ffd4d4;color:var(--red)}
+
+.timeline{position:relative;padding-left:36px}
+.timeline::before{content:'';position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:var(--border)}
+.t-item{position:relative;padding-bottom:28px}
+.t-item:last-child{padding-bottom:0}
+.t-dot{position:absolute;left:-36px;top:0;width:24px;height:24px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.t-item.complete .t-dot{background:var(--green)}
+.t-item.active .t-dot{background:var(--blue);box-shadow:0 0 0 4px rgba(0,40,104,.15)}
+.t-title{font-size:14px;font-weight:600;color:var(--text)}
+.t-item.complete .t-title,.t-item.active .t-title{color:var(--blue)}
+.t-desc{font-size:12.5px;color:var(--muted);margin-top:3px}
+.t-date{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:4px}
+
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+@media(max-width:560px){.detail-grid{grid-template-columns:1fr}.result-head{flex-direction:column}.search-row{flex-direction:column}}
+.detail-item{font-size:13px}
+.detail-item .dl{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.detail-item .dv{color:var(--text);font-weight:600}
+
+.actions-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{padding:11px 22px;border-radius:var(--radius);font-weight:600;font-size:13px;text-decoration:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+
+.not-found{text-align:center;padding:40px 20px;color:var(--muted)}
+.not-found .icon{font-size:40px;margin-bottom:12px}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="gov-banner">🇺🇸 An official website of the United States Government — U.S. Department of State</div>
+<nav>
+  <a href="index.html" class="nav-brand">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#C9A84C" opacity=".15" stroke="#C9A84C" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="30" fill="#C9A84C" font-family="serif">★</text></svg>
+    <strong>U.S. Visa Portal</strong>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="main">
+  <div class="page-title">
+    <h1>Track Your Application</h1>
+    <p>Enter your reference number to view real-time application status.</p>
+  </div>
+
+  <div class="search-card">
+    <div class="search-row">
+      <input type="text" id="refInput" placeholder="e.g. US-2024-A1B2C3" maxlength="20"/>
+      <button onclick="searchApp()">Track Status</button>
+    </div>
+    <div class="search-hint">Your reference number was provided after submitting your application.</div>
+  </div>
+
+  <div id="resultArea"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const FB = {apiKey:"AIzaSyAQbiR_7vvcUlr0nr3NKQ2csjh-iwe0rhY",authDomain:"visa-3504e.firebaseapp.com",projectId:"visa-3504e",storageBucket:"visa-3504e.firebasestorage.app",messagingSenderId:"618621727677",appId:"1:618621727677:web:72dccc703c97a5c739d8d4"};
+const app = initializeApp(FB);
+const db = getFirestore(app);
+
+const STAGES = [
+  {key:'submitted', title:'Application Submitted', desc:'Your DS-160 application has been received.'},
+  {key:'payment_received', title:'Fee Payment Confirmed', desc:'MRV fee payment has been processed successfully.'},
+  {key:'biometric_scheduled', title:'Biometric Appointment', desc:'Biometric enrollment scheduled or completed.'},
+  {key:'under_review', title:'Application Under Review', desc:'Consular officer is reviewing your application.'},
+  {key:'decision', title:'Final Decision', desc:'Visa approved or denied — check email for details.'}
+];
+
+const STATUS_LABELS = {
+  pending_payment:'Pending Payment',
+  payment_received:'Payment Received',
+  biometric_scheduled:'Biometric Scheduled',
+  under_review:'Under Review',
+  approved:'Approved',
+  denied:'Denied'
+};
+
+window.searchApp = async function(){
+  const ref = document.getElementById('refInput').value.trim().toUpperCase();
+  const resultArea = document.getElementById('resultArea');
+  if(!ref){ document.getElementById('refInput').focus(); return; }
+  resultArea.style.display='block';
+  resultArea.innerHTML = '<div class="loading">⏳ Searching for your application...</div>';
+  try{
+    const snap = await getDoc(doc(db,'visa_applications',ref));
+    if(!snap.exists()){
+      resultArea.innerHTML = `<div class="result-card"><div class="not-found"><div class="icon">🔍</div><strong>No application found</strong><p style="margin-top:6px;font-size:13px">Please check your reference number and try again.</p></div></div>`;
+      return;
+    }
+    renderResult(snap.data());
+  } catch(e){
+    resultArea.innerHTML = `<div class="result-card"><div class="not-found"><div class="icon">⚠️</div><strong>Unable to retrieve application</strong><p style="margin-top:6px;font-size:13px">Please try again in a moment.</p></div></div>`;
+  }
+};
+
+function renderResult(d){
+  const status = d.status || 'pending_payment';
+  const stageIndex = {
+    pending_payment:0, payment_received:1, biometric_scheduled:2,
+    under_review:3, approved:4, denied:4
+  }[status] ?? 0;
+
+  const timelineHtml = STAGES.map((s,i)=>{
+    let cls = '';
+    if(i < stageIndex) cls = 'complete';
+    else if(i === stageIndex) cls = 'active';
+    const icon = i < stageIndex ? '✓' : (i===stageIndex ? '●' : '');
+    return `<div class="t-item ${cls}">
+      <div class="t-dot">${icon}</div>
+      <div class="t-title">${s.title}</div>
+      <div class="t-desc">${s.desc}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('resultArea').innerHTML = `
+    <div class="result-card">
+      <div class="result-head">
+        <div>
+          <div class="result-ref">Reference: ${d.ref}</div>
+          <div class="result-name">${d.fullName||'Applicant'}</div>
+        </div>
+        <span class="status-pill status-${status}">${STATUS_LABELS[status]||status}</span>
+      </div>
+      <div class="timeline">${timelineHtml}</div>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="dl">Visa Category</div><div class="dv">${d.visaType||'—'}</div></div>
+        <div class="detail-item"><div class="dl">Submitted</div><div class="dv">${d.createdAt? new Date(d.createdAt.seconds*1000).toLocaleDateString() : '—'}</div></div>
+        <div class="detail-item"><div class="dl">Fee Status</div><div class="dv">${d.feePaid?'✅ Paid':'⏳ Pending'}</div></div>
+        <div class="detail-item"><div class="dl">Biometric</div><div class="dv">${d.biometricScheduled?'✅ Scheduled':'⏳ Not scheduled'}</div></div>
+      </div>
+      <div class="actions-row">
+        ${!d.biometricScheduled ? `<a href="biometric.html?ref=${d.ref}" class="btn btn-blue">Schedule Biometric →</a>` : ''}
+        <a href="index.html" class="btn btn-outline">Back to Home</a>
+      </div>
+    </div>
+  `;
+}
+
+// Auto-search if ref in URL
+const urlRef = new URLSearchParams(window.location.search).get('ref');
+if(urlRef){
+  document.getElementById('refInput').value = urlRef;
+  window.addEventListener('DOMContentLoaded', ()=>searchApp());
+  searchApp();
+}
+
+document.getElementById('refInput').addEventListener('keydown', e=>{ if(e.key==='Enter') searchApp(); });
+</script>
+</body>
+</html>

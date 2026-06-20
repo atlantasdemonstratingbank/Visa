@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Visa Application Form — U.S. Visa Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#002868;--blue2:#003a99;--red:#BF0A30;--gold:#C9A84C;--white:#fff;--offwhite:#F0F4FA;--text:#1A1A2E;--muted:#5a6480;--border:#d0d8e8;--green:#1a6b3a;--serif:'Source Serif 4',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'Roboto Mono',monospace;--radius:6px;--shadow:0 2px 16px rgba(0,40,104,.10)}
+body{font-family:var(--sans);color:var(--text);background:var(--offwhite);min-height:100vh}
+.gov-banner{background:#1a1a1a;color:#eee;font-size:12px;padding:5px 20px}
+nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.nav-brand strong{font-family:var(--serif);font-size:15px}
+.nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px}
+.nav-back:hover{color:#fff}
+
+/* PROGRESS BAR */
+.progress-wrap{background:#fff;border-bottom:1px solid var(--border);padding:0 24px}
+.progress-inner{max-width:900px;margin:0 auto;padding:20px 0}
+.progress-steps{display:flex;align-items:center;gap:0}
+.p-step{display:flex;align-items:center;flex:1;position:relative}
+.p-step:last-child{flex:none}
+.p-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--muted);transition:all .3s;flex-shrink:0;z-index:1}
+.p-step.active .p-dot{border-color:var(--blue);background:var(--blue);color:#fff}
+.p-step.done .p-dot{border-color:var(--green);background:var(--green);color:#fff}
+.p-line{flex:1;height:2px;background:var(--border);transition:background .3s}
+.p-step.done .p-line{background:var(--green)}
+.p-step.active .p-line{background:linear-gradient(90deg,var(--blue),var(--border))}
+.p-label{font-size:10px;font-weight:600;color:var(--muted);position:absolute;top:36px;left:50%;transform:translateX(-50%);white-space:nowrap;text-align:center}
+.p-step.active .p-label{color:var(--blue)}
+.p-step.done .p-label{color:var(--green)}
+
+/* MAIN */
+.main{max-width:900px;margin:32px auto;padding:0 20px 60px}
+.form-header{margin-bottom:28px}
+.form-ref{font-family:var(--mono);font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--border);padding:6px 12px;border-radius:var(--radius);display:inline-block;margin-bottom:12px}
+.form-header h1{font-family:var(--serif);font-size:28px;color:var(--blue);font-weight:700}
+.form-header p{color:var(--muted);font-size:14px;margin-top:6px}
+
+/* CARDS */
+.form-step{display:none}
+.form-step.active{display:block}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:28px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-family:var(--serif);font-size:18px;color:var(--blue);font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card-title span{font-size:20px}
+.card-sub{font-size:13px;color:var(--muted);margin-bottom:22px}
+.row{display:grid;gap:18px;margin-bottom:18px}
+.row-2{grid-template-columns:1fr 1fr}
+.row-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:600px){.row-2,.row-3{grid-template-columns:1fr}}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase}
+.field label .req{color:var(--red)}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:var(--sans);font-size:14px;color:var(--text);background:#fff;transition:border-color .2s;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,40,104,.08)}
+.field textarea{resize:vertical;min-height:80px}
+.field .hint{font-size:11px;color:var(--muted);margin-top:5px}
+.radio-group{display:flex;gap:16px;flex-wrap:wrap}
+.radio-opt{display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1.5px solid var(--border);border-radius:var(--radius);flex:1;min-width:120px;transition:all .2s}
+.radio-opt input[type=radio]{width:16px;height:16px;accent-color:var(--blue)}
+.radio-opt:has(input:checked){border-color:var(--blue);background:rgba(0,40,104,.04)}
+.section-divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+.notice{background:#fff8e1;border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:#5a4000;margin-bottom:18px}
+
+/* FOOTER NAV */
+.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:var(--radius);font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue2)}
+.btn-secondary{background:var(--offwhite);color:var(--blue);border:1.5px solid var(--border)}
+.btn-success{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+
+/* SUCCESS */
+.success-card{background:#fff;border-radius:12px;padding:48px 36px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow)}
+.success-icon{font-size:56px;margin-bottom:20px}
+.success-ref{font-family:var(--mono);font-size:22px;color:var(--blue);font-weight:700;background:var(--offwhite);padding:12px 24px;border-radius:var(--radius);display:inline-block;margin:16px 0;letter-spacing:2px}
+.success-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:32px;text-align:left}
+.next-step{padding:16px;background:var(--offwhite);border-radius:8px;border-left:3px solid var(--blue)}
+.next-step strong{display:block;font-size:13px;color:var(--blue);margin-bottom:4px}
+.next-step p{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="gov-banner">🇺🇸 An official website of the United States Government — U.S. Department of State</div>
+<nav>
+  <a href="index.html" class="nav-brand">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#C9A84C" opacity=".15" stroke="#C9A84C" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="30" fill="#C9A84C" font-family="serif">★</text></svg>
+    <strong>U.S. Visa Portal</strong>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-steps" id="progressSteps">
+      <div class="p-step active" data-step="0"><div class="p-dot" id="dot0">1</div><span class="p-label">Personal Info</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="1"><div class="p-dot" id="dot1">2</div><span class="p-label">Travel Info</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="2"><div class="p-dot" id="dot2">3</div><span class="p-label">Background</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="3"><div class="p-dot" id="dot3">4</div><span class="p-label">Documents</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="4"><div class="p-dot" id="dot4">✓</div><span class="p-label">Review</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN FORM -->
+<div class="main">
+  <div class="form-header">
+    <div class="form-ref" id="refDisplay">Loading reference...</div>
+    <h1>Nonimmigrant Visa Application</h1>
+    <p>Form DS-160 Online — Complete all required fields marked with <span style="color:var(--red)">*</span></p>
+  </div>
+
+  <!-- STEP 1: PERSONAL INFO -->
+  <div class="form-step active" id="step0">
+    <div class="card">
+      <div class="card-title"><span>👤</span> Personal Information</div>
+      <div class="card-sub">Enter your name exactly as it appears on your passport.</div>
+      <div class="row row-3">
+        <div class="field"><label>Surname / Last Name <span class="req">*</span></label><input type="text" id="lastName" placeholder="SMITH"/><div class="hint">As in passport, capital letters</div></div>
+        <div class="field"><label>First / Given Name <span class="req">*</span></label><input type="text" id="firstName" placeholder="JOHN"/></div>
+        <div class="field"><label>Middle Name</label><input type="text" id="middleName" placeholder="Optional"/></div>
+      </div>
+      <div class="row row-2">
+        <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="dob"/></div>
+        <div class="field"><label>Gender <span class="req">*</span></label>
+          <select id="gender"><option value="">Select...</option><option>Male</option><option>Female</option><option>Non-binary</option></select>
+        </div>
+      </div>
+      <div class="row row-2">
+        <div class="field"><label>Country of Birth <span class="req">*</span></label><input type="text" id="birthCountry" placeholder="e.g. Nigeria"/></div>
+        <div class="field"><label>Country of Citizenship <span class="req">*</span></label><input type="text" id="citizenship" placeholder="e.g. Nigeria"/></div>
+      </div>
+      <hr class="section-divider"/>
+      <div class="card-title"><span>📧</span> Contact Information</div>
+      <div class="card-sub" style="margin-top:8px">Your primary email will be used for all official correspondence.</div>
+      <div class="row row-2">
+        <div class="field"><label>Email Address <span class="req">*</span></label><input type="email" id="email" placeholder="you@example.com"/></div>
+        <div class="field"><label>Phone Number <span class="req">*</span></label><input type="tel" id="phone" placeholder="+1 234 567 8900"/></div>
+      </div>
+      <div class="field"><label>Home Address <span class="req">*</span></label><textarea id="homeAddress" placeholder="Street address, City, Country"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📕</span> Passport Information</div>
+      <div class="card-sub">Enter details from your current, valid passport.</div>
+      <div class="row row-2">
+        <div class="field"><label>Passport Number <span class="req">*</span></label><input type="text" id="passportNum" placeholder="A12345678" style="font-family:var(--mono)"/></div>
+        <div class="field"><label>Passport Type <span class="req">*</span></label>
+          <select id="passportType"><option value="">Select...</option><option>Regular / Ordinary</option><option>Official</option><option>Diplomatic</option><option>Emergency</option></select>
+        </div>
+      </div>
+      <div class="row row-3">
+        <div class="field"><label>Issue Date <span class="req">*</span></label><input type="date" id="passportIssue"/></div>
+        <div class="field"><label>Expiry Date <span class="req">*</span></label><input type="date" id="passportExpiry"/></div>
+        <div class="field"><label>Issuing Country <span class="req">*</span></label><input type="text" id="passportCountry" placeholder="e.g. Nigeria"/></div>
+      </div>
+    </div>
+    <div class="form-nav">
+      <span style="font-size:13px;color:var(--muted)">Step 1 of 4</span>
+      <button class="btn btn-primary" onclick="nextStep(0)">Next: Travel Info →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: TRAVEL INFO -->
+  <div class="form-step" id="step1">
+    <div class="card">
+      <div class="card-title"><span>✈️</span> Travel Information</div>
+      <div class="card-sub">Provide details about your intended visit to the United States.</div>
+      <div class="row row-2">
+        <div class="field"><label>Visa Category <span class="req">*</span></label>
+          <select id="visaType"><option value="">Select category...</option><option value="B1B2">B-1/B-2 — Visitor</option><option value="F1">F-1 — Student</option><option value="H1B">H-1B — Specialty Worker</option><option value="J1">J-1 — Exchange Visitor</option><option value="O1">O-1 — Extraordinary Ability</option><option value="L1">L-1 — Intracompany Transfer</option></select>
+        </div>
+        <div class="field"><label>Purpose of Visit <span class="req">*</span></label><input type="text" id="purpose" placeholder="e.g. Tourism, Business Conference"/></div>
+      </div>
+      <div class="row row-2">
+        <div class="field"><label>Intended Arrival Date <span class="req">*</span></label><input type="date" id="arrivalDate"/></div>
+        <div class="field"><label>Intended Departure Date <span class="req">*</span></label><input type="date" id="departureDate"/></div>
+      </div>
+      <div class="field"><label>U.S. Address During Visit <span class="req">*</span></label><textarea id="usAddress" placeholder="Hotel name, street address, city, state, ZIP"></textarea></div>
+      <hr class="section-divider"/>
+      <div class="card-title" style="margin-bottom:8px"><span>💰</span> Financial Information</div>
+      <div class="row row-2">
+        <div class="field"><label>Who is paying for your trip? <span class="req">*</span></label>
+          <select id="tripFunder"><option value="">Select...</option><option>Self</option><option>Employer / Company</option><option>Family member</option><option>Scholarship / Grant</option><option>Other</option></select>
+        </div>
+        <div class="field"><label>Estimated Trip Cost (USD) <span class="req">*</span></label><input type="number" id="tripCost" placeholder="e.g. 3000"/></div>
+      </div>
+      <div class="field"><label>Do you have a U.S. sponsor? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="hasSponsor" value="yes"/> Yes, I have a U.S. sponsor</label>
+          <label class="radio-opt"><input type="radio" name="hasSponsor" value="no" checked/> No sponsor</label>
+        </div>
+      </div>
+      <div class="field" id="sponsorField" style="display:none"><label>Sponsor Name & Contact</label><textarea id="sponsorInfo" placeholder="Full name, address, relationship, phone number"></textarea></div>
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(1)">Next: Background →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: BACKGROUND -->
+  <div class="form-step" id="step2">
+    <div class="card">
+      <div class="card-title"><span>📋</span> Background & Security Questions</div>
+      <div class="card-sub">Answer all questions truthfully. False statements may result in visa denial.</div>
+      <div class="notice">⚠️ U.S. law requires truthful answers. Misrepresentation is a federal offense under 18 U.S.C. §1001.</div>
+
+      <div class="field" style="margin-bottom:18px">
+        <label>Have you ever been refused a U.S. visa or been refused admission to the United States? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q1" value="yes"/> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q1" value="no" checked/> No</label>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:18px">
+        <label>Have you ever been arrested, cited, or convicted for any offense or crime, even if subject to a pardon? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q2" value="yes"/> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q2" value="no" checked/> No</label>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:18px">
+        <label>Have you ever violated the terms of a U.S. visa? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q3" value="yes"/> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q3" value="no" checked/> No</label>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:18px">
+        <label>Do you have a communicable disease of public health significance? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q4" value="yes"/> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q4" value="no" checked/> No</label>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:18px">
+        <label>Have you ever been a member of a terrorist organization? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q5" value="yes"/> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q5" value="no" checked/> No</label>
+        </div>
+      </div>
+      <hr class="section-divider"/>
+      <div class="card-title" style="margin-bottom:8px"><span>💼</span> Employment Information</div>
+      <div class="row row-2">
+        <div class="field"><label>Current Occupation <span class="req">*</span></label><input type="text" id="occupation" placeholder="e.g. Software Engineer, Teacher"/></div>
+        <div class="field"><label>Employer / School Name</label><input type="text" id="employer" placeholder="e.g. Acme Corp, University of Lagos"/></div>
+      </div>
+      <div class="field"><label>Brief description of your work / studies</label><textarea id="jobDesc" placeholder="Describe your current role or field of study..."></textarea></div>
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(2)">Next: Documents →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: DOCUMENTS -->
+  <div class="form-step" id="step3">
+    <div class="card">
+      <div class="card-title"><span>📁</span> Document Upload</div>
+      <div class="card-sub">Upload clear scans or photos. Accepted formats: PDF, JPG, PNG. Max 5MB per file.</div>
+      <div id="docList"></div>
+      <div id="uploadMsg" style="font-size:13px;color:var(--muted);margin-top:12px"></div>
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(3)">Next: Review →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: REVIEW -->
+  <div class="form-step" id="step4">
+    <div class="card">
+      <div class="card-title"><span>✅</span> Review & Submit</div>
+      <div class="card-sub">Review your information before submitting. You will be redirected to pay the MRV fee.</div>
+      <div id="reviewContent" style="font-size:14px;line-height:2"></div>
+      <hr class="section-divider"/>
+      <div class="field" style="margin-bottom:0">
+        <label class="radio-opt" style="border-color:var(--green)">
+          <input type="checkbox" id="certify" style="width:16px;height:16px;accent-color:var(--green)"/>
+          <span style="font-size:13px">I certify that all information provided is true and accurate. I understand that false statements may result in visa denial and criminal prosecution.</span>
+        </label>
+      </div>
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+      <button class="btn btn-red" onclick="submitApplication()">Submit & Pay Fee →</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="form-step" id="step5">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <h2 style="font-family:var(--serif);font-size:26px;color:var(--blue)">Application Submitted Successfully</h2>
+      <p style="color:var(--muted);margin-top:8px;font-size:14px">Your reference number is:</p>
+      <div class="success-ref" id="finalRef">US-2024-XXXXXX</div>
+      <p style="font-size:13px;color:var(--muted)">Save this reference number. You will need it to track your application, schedule your biometric appointment, and collect your visa.</p>
+      <div class="success-steps">
+        <div class="next-step"><strong>📧 Check Email</strong><p>Confirmation sent to your registered email address.</p></div>
+        <div class="next-step"><strong>💳 Pay MRV Fee</strong><p>Your fee payment is being processed. Check your email for receipt.</p></div>
+        <div class="next-step"><strong>📅 Book Biometric</strong><p>Schedule your fingerprint & photo appointment at a U.S. Embassy.</p></div>
+        <div class="next-step"><strong>📍 Track Status</strong><p>Monitor your application using your reference number.</p></div>
+      </div>
+      <div style="display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap">
+        <a href="status.html" class="btn btn-primary">Track My Application</a>
+        <a href="biometric.html" class="btn btn-secondary">Book Biometric →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase + Flutterwave -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const FB = {apiKey:"AIzaSyAQbiR_7vvcUlr0nr3NKQ2csjh-iwe0rhY",authDomain:"visa-3504e.firebaseapp.com",projectId:"visa-3504e",storageBucket:"visa-3504e.firebasestorage.app",messagingSenderId:"618621727677",appId:"1:618621727677:web:72dccc703c97a5c739d8d4"};
+const app = initializeApp(FB);
+const db = getFirestore(app);
+
+const CLOUDINARY = {cloud_name:'dbgxllxdb', upload_preset:'efootball_screenshots'};
+const FLW_KEY = 'FLWPUBK-d1231ee5582659ed92eca52b827332f8-X';
+const FEES = {B1B2:185,F1:185,H1B:190,J1:160,O1:460,L1:460};
+
+let currentStep = 0;
+let appRef = '';
+let uploadedDocs = {};
+
+// Generate reference
+function genRef(){
+  const y = new Date().getFullYear();
+  const r = Math.random().toString(36).substring(2,8).toUpperCase();
+  return `US-${y}-${r}`;
+}
+
+appRef = genRef();
+document.getElementById('refDisplay').textContent = `Reference: ${appRef}`;
+
+// Pre-fill visa type from URL
+const urlParams = new URLSearchParams(window.location.search);
+const urlType = urlParams.get('type');
+if(urlType){ setTimeout(()=>{const el=document.getElementById('visaType');if(el)el.value=urlType;},100); }
+
+// STEP NAVIGATION
+window.nextStep = function(from){
+  if(!validateStep(from)) return;
+  goStep(from+1);
+};
+window.prevStep = function(from){
+  goStep(from-1);
+};
+
+function goStep(n){
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  document.querySelectorAll('.p-step').forEach((el,i)=>{
+    el.classList.remove('active','done');
+    if(i<n) el.classList.add('done');
+    else if(i===n) el.classList.add('active');
+  });
+  if(n===3) buildDocUploads();
+  if(n===4) buildReview();
+  currentStep = n;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function validateStep(n){
+  const required = {
+    0:['lastName','firstName','dob','gender','birthCountry','citizenship','email','phone','homeAddress','passportNum','passportType','passportIssue','passportExpiry','passportCountry'],
+    1:['visaType','purpose','arrivalDate','departureDate','usAddress','tripFunder','tripCost'],
+    2:['occupation'],
+    3:[],
+    4:[]
+  };
+  let ok = true;
+  (required[n]||[]).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el && !el.value.trim()){
+      el.style.borderColor='var(--red)';
+      el.addEventListener('input',()=>el.style.borderColor='',{once:true});
+      ok = false;
+    }
+  });
+  if(!ok) { alert('Please fill in all required fields.'); }
+  return ok;
+}
+
+// DOCUMENT UPLOADS
+const DOC_LIST = [
+  {id:'passport',label:'Passport Bio Page',required:true},
+  {id:'photo',label:'Passport-Style Photo',required:true},
+  {id:'financial',label:'Bank Statements / Financial Proof',required:true},
+  {id:'employment',label:'Employment Letter / Enrollment Proof',required:false},
+  {id:'itinerary',label:'Travel Itinerary / Hotel Booking',required:false},
+  {id:'sponsor_letter',label:'Sponsor Letter (if applicable)',required:false},
+];
+
+function buildDocUploads(){
+  const wrap = document.getElementById('docList');
+  if(wrap.innerHTML) return;
+  wrap.innerHTML = DOC_LIST.map(d=>`
+    <div style="border:1.5px dashed var(--border);border-radius:8px;padding:16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px" id="doc-wrap-${d.id}">
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text)">${d.label} ${d.required?'<span style="color:var(--red)">*</span>':''}</div>
+        <div style="font-size:12px;color:var(--muted)">PDF, JPG, PNG — max 5MB</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span id="doc-status-${d.id}" style="font-size:12px;color:var(--muted)">Not uploaded</span>
+        <label style="background:var(--blue);color:#fff;padding:8px 16px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-weight:600">
+          Upload <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="uploadDoc('${d.id}',this)"/>
+        </label>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.uploadDoc = async function(id, input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){ alert('File too large. Maximum is 5MB.'); return; }
+  const status = document.getElementById('doc-status-'+id);
+  status.textContent = '⏳ Uploading...'; status.style.color='var(--muted)';
+  try{
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', CLOUDINARY.upload_preset);
+    fd.append('folder', 'visa_docs/'+appRef);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloud_name}/auto/upload`,{method:'POST',body:fd});
+    const data = await res.json();
+    if(data.secure_url){
+      uploadedDocs[id] = data.secure_url;
+      status.textContent = '✅ Uploaded';
+      status.style.color = 'var(--green)';
+      document.getElementById('doc-wrap-'+id).style.borderColor='var(--green)';
+    } else { throw new Error('Upload failed'); }
+  } catch(e){
+    status.textContent = '❌ Failed — retry';
+    status.style.color = 'var(--red)';
+  }
+};
+
+function buildReview(){
+  const v = id=>document.getElementById(id)?.value||'—';
+  document.getElementById('reviewContent').innerHTML = `
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      ${row('Full Name',`${v('firstName')} ${v('middleName')} ${v('lastName')}`)}
+      ${row('Date of Birth',v('dob'))}
+      ${row('Citizenship',v('citizenship'))}
+      ${row('Email',v('email'))}
+      ${row('Phone',v('phone'))}
+      ${row('Passport No.',v('passportNum'))}
+      ${row('Passport Expiry',v('passportExpiry'))}
+      ${row('Visa Category',v('visaType'))}
+      ${row('Purpose',v('purpose'))}
+      ${row('Arrival Date',v('arrivalDate'))}
+      ${row('Departure Date',v('departureDate'))}
+      ${row('Documents Uploaded',Object.keys(uploadedDocs).length+' / '+DOC_LIST.length)}
+      ${row('MRV Fee (USD)','$'+(FEES[v('visaType')]||185))}
+    </table>
+  `;
+}
+function row(k,v){ return `<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 4px;color:var(--muted);font-weight:600;width:40%">${k}</td><td style="padding:8px 4px">${v}</td></tr>`; }
+
+// SUBMIT
+window.submitApplication = async function(){
+  if(!document.getElementById('certify').checked){
+    alert('Please certify that your information is accurate before submitting.'); return;
+  }
+  const btn = event.target;
+  btn.disabled=true; btn.textContent='Processing...';
+  const visa = document.getElementById('visaType').value||'B1B2';
+  const fee = FEES[visa]||185;
+  const email = document.getElementById('email').value;
+  const name = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;
+
+  // Save to Firestore
+  try{
+    await setDoc(doc(db,'visa_applications',appRef),{
+      ref:appRef,
+      fullName:name,
+      email,
+      dob:document.getElementById('dob').value,
+      citizenship:document.getElementById('citizenship').value,
+      passportNum:document.getElementById('passportNum').value,
+      passportExpiry:document.getElementById('passportExpiry').value,
+      visaType:visa,
+      purpose:document.getElementById('purpose').value,
+      arrivalDate:document.getElementById('arrivalDate').value,
+      departureDate:document.getElementById('departureDate').value,
+      occupation:document.getElementById('occupation').value,
+      documents:uploadedDocs,
+      status:'pending_payment',
+      feePaid:false,
+      biometricScheduled:false,
+      createdAt:serverTimestamp()
+    });
+  } catch(e){ console.warn('Firestore:', e); }
+
+  // Flutterwave payment
+  FlutterwaveCheckout({
+    public_key: FLW_KEY,
+    tx_ref: appRef,
+    amount: fee,
+    currency: 'USD',
+    payment_options: 'card,banktransfer',
+    customer: { email, name },
+    customizations: {
+      title: 'U.S. Visa MRV Fee',
+      description: `${visa} Visa Application — ${appRef}`,
+      logo: ''
+    },
+    callback: async function(res){
+      if(res.status==='successful'||res.status==='completed'){
+        try{
+          await setDoc(doc(db,'visa_applications',appRef),{status:'payment_received',feePaid:true,paymentRef:res.transaction_id,updatedAt:serverTimestamp()},{merge:true});
+        }catch(e){}
+        document.getElementById('finalRef').textContent = appRef;
+        goStep(5);
+      } else {
+        btn.disabled=false; btn.textContent='Submit & Pay Fee →';
+        alert('Payment was not completed. Please try again.');
+      }
+    },
+    onclose: function(){
+      btn.disabled=false; btn.textContent='Submit & Pay Fee →';
+    }
+  });
+};
+
+// Sponsor field toggle
+document.addEventListener('change', e=>{
+  if(e.target.name==='hasSponsor'){
+    document.getElementById('sponsorField').style.display = e.target.value==='yes'?'block':'none';
+  }
+});
+</script>
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+</body>
+</html>
