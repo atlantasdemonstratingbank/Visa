@@ -22,22 +22,56 @@ There's also a manual EN / PT / ES switcher in the nav on every page — once so
 ## New: Admin-configurable pricing
 Visa fees are no longer hardcoded. `apply.html` and the homepage both read current pricing from a `settings/fees` Firestore document, which your admin panel's **Manage Pricing** screen writes to. If that document doesn't exist yet (e.g. before you've saved pricing once from the admin panel), built-in defaults are used as a fallback — nothing breaks.
 
+## New: Pay later, any order
+Submitting the application form no longer forces immediate payment. After submitting, the applicant gets their reference number right away, with a **Pay Now** button (optional) on the success screen. They can skip it and pay anytime later from the Track Status page.
+
+Payment and biometric verification can now happen in **either order** — biometric.html no longer blocks scheduling if the fee hasn't been paid yet.
+
+Track Status (`status.html`) shows a combined message depending on what's done:
+- Neither done → reminder that either step can be completed first, with buttons for both
+- Paid, biometric pending → "proceed to biometric verification" + button
+- Biometric done, payment pending → "Pay Now" button
+- Both done → Under Review / Approved (with delivery address) / Denied, set by the admin
+
+If someone is already paid, the Pay Now button simply doesn't appear — there's no way to pay twice through the UI.
+
 ## One thing to check before going live
-Go to Firebase Console → your `visa-3504e` project → Firestore → Rules, and make sure `visa_applications` allows public **create** (so applicants can submit) and public **read** (so `status.html`/`biometric.html` can look up by reference number), but blocks public **update** — only your admin panel should be able to change status. The `settings/fees` document also needs public **read** so pricing displays correctly for visitors. Suggested rules:
+Go to Firebase Console → your `visa-3504e` project → Firestore → Rules, and paste in the rules below. These allow applicants to create/read applications and update their own payment & biometric fields (no login required for that), while keeping admin-only fields (review status, delivery address) protected to your admin account:
 
 ```
-match /visa_applications/{ref} {
-  allow create: if true;
-  allow read: if true;
-  allow update: if request.auth != null
-                && request.auth.token.email == 'viccylay30@gmail.com';
-  allow delete: if false;
-}
+rules_version = '2';
 
-match /settings/fees {
-  allow read: if true;
-  allow write: if request.auth != null
-               && request.auth.token.email == 'viccylay30@gmail.com';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /visa_applications/{ref} {
+      allow create: if true;
+      allow read: if true;
+
+      allow update: if request.auth != null
+                    && request.auth.token.email == 'viccylay30@gmail.com';
+
+      allow update: if request.auth == null
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                      'feePaid', 'paymentRef',
+                      'biometricScheduled', 'biometricLocation', 'biometricDate', 'biometricTime',
+                      'biometricPhotos', 'biometricCaptureComplete',
+                      'updatedAt'
+                    ]);
+
+      allow delete: if false;
+    }
+
+    match /settings/fees {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email == 'viccylay30@gmail.com';
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
 }
 ```
 

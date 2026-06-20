@@ -113,26 +113,49 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 <script src="i18n.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const FB = {apiKey:"AIzaSyAQbiR_7vvcUlr0nr3NKQ2csjh-iwe0rhY",authDomain:"visa-3504e.firebaseapp.com",projectId:"visa-3504e",storageBucket:"visa-3504e.firebasestorage.app",messagingSenderId:"618621727677",appId:"1:618621727677:web:72dccc703c97a5c739d8d4"};
 const app = initializeApp(FB);
 const db = getFirestore(app);
 
-function getStages(){
-  const L = getCurrentLang();
-  return [
-    {key:'submitted', title:t('status.t1t',L), desc:t('status.t1d',L)},
-    {key:'payment_received', title:t('status.t2t',L), desc:t('status.t2d',L)},
-    {key:'biometric_scheduled', title:t('status.t3t',L), desc:t('status.t3d',L)},
-    {key:'under_review', title:t('status.t4t',L), desc:t('status.t4d',L)},
-    {key:'decision', title:t('status.t5t',L), desc:t('status.t5d',L)}
-  ];
-}
+const FLW_KEY = 'FLWPUBK-d1231ee5582659ed92eca52b827332f8-X';
+let FEES = {B1B2:185,F1:185,H1B:190,J1:160,O1:460,L1:460};
+const feesReady = (async function(){
+  try{
+    const snap = await getDoc(doc(db,'settings','fees'));
+    if(snap.exists()) FEES = { ...FEES, ...snap.data() };
+  } catch(e){ console.warn('Could not load admin pricing, using defaults:', e); }
+})();
+
+let currentResultData = null; // latest fetched application doc, used by Pay Now
 
 function getStatusLabels(){
   return TRANSLATIONS[getCurrentLang()].status.statusLabels;
 }
+
+// Combines feePaid + biometricScheduled + admin reviewStatus into a single state,
+// since payment and biometric verification can now happen in any order.
+function computeCombinedStatus(d){
+  const paid = !!d.feePaid;
+  const bio = !!d.biometricScheduled;
+  if(!paid && !bio) return 'pending_both';
+  if(paid && !bio) return 'paid_pending_bio';
+  if(!paid && bio) return 'bio_pending_paid';
+  const review = d.reviewStatus || 'pending';
+  if(review==='approved') return 'approved';
+  if(review==='denied') return 'denied';
+  return 'under_review';
+}
+
+const STATUS_BADGE_CLASS = {
+  pending_both:'status-pending_payment',
+  paid_pending_bio:'status-payment_received',
+  bio_pending_paid:'status-biometric_scheduled',
+  under_review:'status-under_review',
+  approved:'status-approved',
+  denied:'status-denied'
+};
 
 window.searchApp = async function(){
   const ref = document.getElementById('refInput').value.trim().toUpperCase();
@@ -161,23 +184,35 @@ window.searchAppIfLoaded = function(){
 function renderResult(d){
   const L = getCurrentLang();
   const STATUS_LABELS = getStatusLabels();
-  const status = d.status || 'pending_payment';
-  const stageIndex = {
-    pending_payment:0, payment_received:1, biometric_scheduled:2,
-    under_review:3, approved:4, denied:4
-  }[status] ?? 0;
+  currentResultData = d;
+  const combined = computeCombinedStatus(d);
 
-  const timelineHtml = getStages().map((s,i)=>{
-    let cls = '';
-    if(i < stageIndex) cls = 'complete';
-    else if(i === stageIndex) cls = 'active';
-    const icon = i < stageIndex ? '✓' : (i===stageIndex ? '●' : '');
-    return `<div class="t-item ${cls}">
-      <div class="t-dot">${icon}</div>
-      <div class="t-title">${s.title}</div>
-      <div class="t-desc">${s.desc}</div>
-    </div>`;
-  }).join('');
+  let message = '';
+  let actionButtons = '';
+  switch(combined){
+    case 'pending_both':
+      message = t('status.msgPendingBoth',L);
+      actionButtons = `<button class="btn btn-blue" id="payNowBtn" onclick="payNowFromStatus()">${t('status.payNowBtn',L)}</button>
+        <a href="biometric.html?ref=${d.ref}" class="btn btn-outline">${t('status.goBiometricBtn',L)}</a>`;
+      break;
+    case 'paid_pending_bio':
+      message = t('status.msgPaidPendingBio',L);
+      actionButtons = `<a href="biometric.html?ref=${d.ref}" class="btn btn-blue">${t('status.goBiometricBtn',L)}</a>`;
+      break;
+    case 'bio_pending_paid':
+      message = t('status.msgBioPendingPay',L);
+      actionButtons = `<button class="btn btn-blue" id="payNowBtn" onclick="payNowFromStatus()">${t('status.payNowBtn',L)}</button>`;
+      break;
+    case 'under_review':
+      message = t('status.msgUnderReview',L);
+      break;
+    case 'approved':
+      message = `${t('status.msgApproved',L)} ${d.deliveryAddress || '—'}`;
+      break;
+    case 'denied':
+      message = t('status.msgDenied',L);
+      break;
+  }
 
   document.getElementById('resultArea').innerHTML = `
     <div class="result-card">
@@ -186,9 +221,9 @@ function renderResult(d){
           <div class="result-ref">Reference: ${d.ref}</div>
           <div class="result-name">${d.fullName||'Applicant'}</div>
         </div>
-        <span class="status-pill status-${status}">${STATUS_LABELS[status]||status}</span>
+        <span class="status-pill ${STATUS_BADGE_CLASS[combined]}">${STATUS_LABELS[combined] || combined}</span>
       </div>
-      <div class="timeline">${timelineHtml}</div>
+      <p style="font-size:14px;line-height:1.6;margin:18px 0;padding:14px 16px;background:var(--offwhite);border-radius:8px">${message}</p>
       <div class="detail-grid">
         <div class="detail-item"><div class="dl">${t('status.visaCategory',L)}</div><div class="dv">${d.visaType||'—'}</div></div>
         <div class="detail-item"><div class="dl">${t('status.submitted',L)}</div><div class="dv">${d.createdAt? new Date(d.createdAt.seconds*1000).toLocaleDateString() : '—'}</div></div>
@@ -196,12 +231,48 @@ function renderResult(d){
         <div class="detail-item"><div class="dl">${t('status.bioStatus',L)}</div><div class="dv">${d.biometricScheduled?'✅ '+t('status.scheduled',L):'⏳ '+t('status.notScheduled',L)}</div></div>
       </div>
       <div class="actions-row">
-        ${!d.biometricScheduled ? `<a href="biometric.html?ref=${d.ref}" class="btn btn-blue">${t('status.scheduleBtn',L)}</a>` : ''}
+        ${actionButtons}
         <a href="index.html" class="btn btn-outline">${t('status.homeBtn',L)}</a>
       </div>
     </div>
   `;
 }
+
+window.payNowFromStatus = async function(){
+  const L = getCurrentLang();
+  if(!currentResultData) return;
+  if(currentResultData.feePaid){ alert(t('status.alreadyPaid',L)); return; }
+  await feesReady;
+  const visa = currentResultData.visaType || 'B1B2';
+  const fee = FEES[visa] || 185;
+  const ref = currentResultData.ref;
+  const btn = document.getElementById('payNowBtn');
+  if(btn){ btn.disabled = true; btn.textContent = '...'; }
+
+  FlutterwaveCheckout({
+    public_key: FLW_KEY,
+    tx_ref: ref,
+    amount: fee,
+    currency: 'USD',
+    payment_options: 'card,banktransfer',
+    customer: { email: currentResultData.email, name: currentResultData.fullName },
+    customizations: { title:'U.S. Visa MRV Fee', description:`${visa} Visa Application — ${ref}`, logo:'' },
+    callback: async function(res){
+      if(res.status==='successful'||res.status==='completed'){
+        try{
+          await setDoc(doc(db,'visa_applications',ref),{feePaid:true,paymentRef:res.transaction_id,updatedAt:serverTimestamp()},{merge:true});
+        }catch(e){}
+        searchApp(); // re-fetch so the combined status re-renders correctly
+      } else {
+        if(btn){ btn.disabled=false; btn.textContent=t('status.payNowBtn',L); }
+        alert(t('apply.review.paymentFailed',L));
+      }
+    },
+    onclose: function(){
+      if(btn){ btn.disabled=false; btn.textContent=t('status.payNowBtn',L); }
+    }
+  });
+};
 
 // Detect/apply language first, then auto-search if ref in URL
 const urlRef = new URLSearchParams(window.location.search).get('ref');
@@ -213,5 +284,6 @@ initI18n().then(()=>{
 
 document.getElementById('refInput').addEventListener('keydown', e=>{ if(e.key==='Enter') searchApp(); });
 </script>
+<script src="https://checkout.flutterwave.com/v3.js"></script>
 </body>
 </html>

@@ -312,10 +312,15 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
       <p style="color:var(--muted);margin-top:8px;font-size:14px" data-i18n="apply.successSub">Your reference number is:</p>
       <div class="success-ref" id="finalRef">US-2024-XXXXXX</div>
       <p style="font-size:13px;color:var(--muted)" data-i18n="apply.successHint">Save this reference number. You will need it to track your application, schedule your biometric appointment, and collect your visa.</p>
+
+      <div id="payArea" style="margin-top:24px">
+        <button class="btn btn-red" style="width:auto" onclick="payNowFromSuccess()" id="payNowBtn" data-i18n="apply.payNowBtn">💳 Pay Application Fee Now</button>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px" data-i18n="apply.payLaterNote">No problem — your reference number is saved. Come back anytime and pay from the Track Status page.</p>
+      </div>
+
       <div class="success-steps">
         <div class="next-step"><strong>📧 <span data-i18n="apply.nextEmail">Check Email</span></strong><p data-i18n="apply.nextEmailD">Confirmation sent to your registered email address.</p></div>
-        <div class="next-step"><strong>💳 <span data-i18n="apply.nextPay">Pay MRV Fee</span></strong><p data-i18n="apply.nextPayD">Your fee payment is being processed. Check your email for receipt.</p></div>
-        <div class="next-step"><strong>📅 <span data-i18n="apply.nextBio">Book Biometric</span></strong><p data-i18n="apply.nextBioD">Schedule your fingerprint & photo appointment at a U.S. Embassy.</p></div>
+        <div class="next-step"><strong>📅 <span data-i18n="apply.nextBio">Book Biometric</span></strong><p data-i18n="apply.nextBioD">Schedule your fingerprint & photo appointment at a U.S. Embassy. You can do this before or after paying.</p></div>
         <div class="next-step"><strong>📍 <span data-i18n="apply.nextTrack">Track Status</span></strong><p data-i18n="apply.nextTrackD">Monitor your application using your reference number.</p></div>
       </div>
       <div style="display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap">
@@ -341,14 +346,20 @@ const FLW_KEY = 'FLWPUBK-d1231ee5582659ed92eca52b827332f8-X';
 let FEES = {B1B2:185,F1:185,H1B:190,J1:160,O1:460,L1:460}; // defaults — overwritten below if admin has set custom prices
 
 // Pull admin-configured pricing from Firestore (settings/fees). Falls back to defaults above if not set or unreachable.
-(async function loadFees(){
+// Stored as a promise so submitApplication() can await it — guarantees the latest price is used even on slow connections.
+const feesReady = (async function loadFees(){
   try{
     const snap = await getDoc(doc(db,'settings','fees'));
     if(snap.exists()){
       const data = snap.data();
       FEES = { ...FEES, ...data };
+      console.log('Loaded admin pricing:', FEES);
+    } else {
+      console.log('No settings/fees document found yet — using default prices.');
     }
-  } catch(e){ /* keep defaults */ }
+  } catch(e){
+    console.warn('Could not load admin pricing (using defaults). This usually means the Firestore rule for settings/fees isn\'t published yet, or isn\'t set to allow public read:', e);
+  }
 })();
 
 let currentStep = 0;
@@ -381,7 +392,7 @@ window.prevStep = function(from){
   goStep(from-1);
 };
 
-function goStep(n){
+async function goStep(n){
   document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('step'+n).classList.add('active');
   document.querySelectorAll('.p-step').forEach((el,i)=>{
@@ -390,7 +401,7 @@ function goStep(n){
     else if(i===n) el.classList.add('active');
   });
   if(n===3) buildDocUploads();
-  if(n===4) buildReview();
+  if(n===4){ await feesReady; buildReview(); }
   currentStep = n;
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -502,7 +513,8 @@ window.refreshDynamicText = function(){
   if(currentStep===4) buildReview();
 };
 
-// SUBMIT
+// SUBMIT — saves the application and shows the reference number immediately.
+// Payment is now a separate, optional step (Pay Now on this screen, or anytime later via Track Status).
 window.submitApplication = async function(){
   const L = getCurrentLang();
   if(!document.getElementById('certify').checked){
@@ -510,12 +522,11 @@ window.submitApplication = async function(){
   }
   const btn = event.target;
   btn.disabled=true; btn.textContent=t('apply.review.processing',L);
+
   const visa = document.getElementById('visaType').value||'B1B2';
-  const fee = FEES[visa]||185;
   const email = document.getElementById('email').value;
   const name = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;
 
-  // Save to Firestore
   try{
     await setDoc(doc(db,'visa_applications',appRef),{
       ref:appRef,
@@ -531,14 +542,33 @@ window.submitApplication = async function(){
       departureDate:document.getElementById('departureDate').value,
       occupation:document.getElementById('occupation').value,
       documents:uploadedDocs,
-      status:'pending_payment',
       feePaid:false,
       biometricScheduled:false,
+      reviewStatus:'pending',
       createdAt:serverTimestamp()
     });
-  } catch(e){ console.warn('Firestore:', e); }
+  } catch(e){
+    console.warn('Firestore save failed:', e);
+    btn.disabled=false; btn.textContent=t('apply.submitBtn',L);
+    alert('Could not save your application. Please check your connection and try again.');
+    return;
+  }
 
-  // Flutterwave payment
+  document.getElementById('finalRef').textContent = appRef;
+  goStep(5);
+};
+
+// Pay Now button on the success screen — optional, can be skipped and done later from Track Status
+window.payNowFromSuccess = async function(){
+  const L = getCurrentLang();
+  const btn = document.getElementById('payNowBtn');
+  btn.disabled = true; btn.textContent = t('apply.review.processing',L);
+  await feesReady;
+  const visa = document.getElementById('visaType').value||'B1B2';
+  const fee = FEES[visa]||185;
+  const email = document.getElementById('email').value;
+  const name = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;
+
   FlutterwaveCheckout({
     public_key: FLW_KEY,
     tx_ref: appRef,
@@ -554,17 +584,16 @@ window.submitApplication = async function(){
     callback: async function(res){
       if(res.status==='successful'||res.status==='completed'){
         try{
-          await setDoc(doc(db,'visa_applications',appRef),{status:'payment_received',feePaid:true,paymentRef:res.transaction_id,updatedAt:serverTimestamp()},{merge:true});
+          await setDoc(doc(db,'visa_applications',appRef),{feePaid:true,paymentRef:res.transaction_id,updatedAt:serverTimestamp()},{merge:true});
         }catch(e){}
-        document.getElementById('finalRef').textContent = appRef;
-        goStep(5);
+        document.getElementById('payArea').innerHTML = `<p style="color:var(--green);font-weight:600;font-size:14px">${t('apply.paidConfirmed',L)}</p>`;
       } else {
-        btn.disabled=false; btn.textContent=t('apply.submitBtn',L);
+        btn.disabled=false; btn.textContent=t('apply.payNowBtn',L);
         alert(t('apply.review.paymentFailed',L));
       }
     },
     onclose: function(){
-      btn.disabled=false; btn.textContent=t('apply.submitBtn',L);
+      btn.disabled=false; btn.textContent=t('apply.payNowBtn',L);
     }
   });
 };

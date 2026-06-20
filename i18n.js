@@ -88,6 +88,8 @@ en: {
     nextBio:'Book Biometric', nextBioD:'Schedule your fingerprint & photo appointment at a U.S. Embassy.',
     nextTrack:'Track Status', nextTrackD:'Monitor your application using your reference number.',
     trackBtn:'Track My Application', bookBtn:'Book Biometric →',
+    payNowBtn:'💳 Pay Application Fee Now', payLaterBtn:"I'll Pay Later", payLaterNote:'No problem — your reference number is saved. Come back anytime and pay from the Track Status page.',
+    paidConfirmed:'✅ Payment received. You can now proceed to biometric verification.',
     docs:{ passport:'Passport Bio Page', photo:'Passport-Style Photo', financial:'Bank Statements / Financial Proof', employment:'Employment Letter / Enrollment Proof', itinerary:'Travel Itinerary / Hotel Booking', sponsor_letter:'Sponsor Letter (if applicable)',
       notUploaded:'Not uploaded', uploading:'Uploading...', uploaded:'Uploaded', failed:'Failed — retry', uploadBtn:'Upload', tooLarge:'File too large. Maximum is 5MB.', fillRequired:'Please fill in all required fields.' },
     review:{ fullName:'Full Name', dob:'Date of Birth', citizenship:'Citizenship', email:'Email', phone:'Phone', passportNum:'Passport No.', passportExpiry:'Passport Expiry', visaCategory:'Visa Category', purpose:'Purpose', arrival:'Arrival Date', departure:'Departure Date', docsUploaded:'Documents Uploaded', fee:'MRV Fee (USD)', certifyAlert:'Please certify that your information is accurate before submitting.', processing:'Processing...', paymentFailed:'Payment was not completed. Please try again.' }
@@ -105,7 +107,15 @@ en: {
     t3t:'Biometric Appointment', t3d:'Biometric enrollment scheduled or completed.',
     t4t:'Application Under Review', t4d:'Consular officer is reviewing your application.',
     t5t:'Final Decision', t5d:'Visa approved or denied — check email for details.',
-    statusLabels:{ pending_payment:'Pending Payment', payment_received:'Payment Received', biometric_scheduled:'Biometric Scheduled', under_review:'Under Review', approved:'Approved', denied:'Denied' }
+    statusLabels:{ pending_both:'Pending Payment & Biometric', paid_pending_bio:'Payment Received', bio_pending_paid:'Biometric Scheduled', under_review:'Under Review', approved:'Approved', denied:'Denied' },
+    payNowBtn:'Pay Application Fee →', alreadyPaid:'✅ Application fee already paid',
+    msgPendingBoth:'Your application fee has not been paid yet, and biometric verification has not been completed. You can complete either step first — in any order.',
+    msgPaidPendingBio:'✅ Payment received. Please proceed to complete your biometric verification.',
+    msgBioPendingPay:'✅ Biometric verification complete. Your application fee has not been paid yet.',
+    msgUnderReview:'🔍 Both steps are complete. Your application is being verified by a consular officer.',
+    msgApproved:'✅ Your visa has been approved! It will be delivered to:',
+    msgDenied:'❌ Your visa application was denied.',
+    goBiometricBtn:'Complete Biometric Verification →'
   },
   biometric: {
     title:'Biometric Appointment', subtitle:'Schedule your fingerprint and photo enrollment at a U.S. Embassy or Consulate near you.',
@@ -122,6 +132,7 @@ en: {
     confirmBtn:'Confirm Biometric Appointment →',
     notFound:'Application not found. Please check your reference number.',
     feeRequired:'Fee payment must be completed before scheduling biometrics.', completePayment:'Complete payment →',
+    payReminder:"You haven't paid your application fee yet — you can do that anytime from the Track Status page. You can still complete biometric verification now.",
     alreadyScheduled:'Your biometric appointment is already scheduled.',
     confirmedTitle:'Appointment Confirmed', emailSent:'A confirmation email has been sent. Please arrive 15 minutes early with all required documents.',
     trackBtn:'Track Application'
@@ -208,6 +219,8 @@ pt: {
     nextBio:'Agendar Biometria', nextBioD:'Agende seu atendimento de impressão digital e foto em uma Embaixada dos EUA.',
     nextTrack:'Acompanhar Status', nextTrackD:'Monitore sua solicitação usando seu número de referência.',
     trackBtn:'Acompanhar Minha Solicitação', bookBtn:'Agendar Biometria →',
+    payNowBtn:'💳 Pagar Taxa Agora', payLaterBtn:'Pagarei Depois', payLaterNote:'Sem problema — seu número de referência está salvo. Volte quando quiser e pague na página de Acompanhar Status.',
+    paidConfirmed:'✅ Pagamento recebido. Você já pode prosseguir para a verificação biométrica.',
     docs:{ passport:'Página de Dados do Passaporte', photo:'Foto Estilo Passaporte', financial:'Extratos Bancários / Comprovante Financeiro', employment:'Carta de Emprego / Comprovante de Matrícula', itinerary:'Itinerário de Viagem / Reserva de Hotel', sponsor_letter:'Carta do Patrocinador (se aplicável)',
       notUploaded:'Não enviado', uploading:'Enviando...', uploaded:'Enviado', failed:'Falhou — tentar novamente', uploadBtn:'Enviar', tooLarge:'Arquivo muito grande. Máximo é 5MB.', fillRequired:'Por favor, preencha todos os campos obrigatórios.' },
     review:{ fullName:'Nome Completo', dob:'Data de Nascimento', citizenship:'Cidadania', email:'E-mail', phone:'Telefone', passportNum:'Nº do Passaporte', passportExpiry:'Validade do Passaporte', visaCategory:'Categoria de Visto', purpose:'Propósito', arrival:'Data de Chegada', departure:'Data de Partida', docsUploaded:'Documentos Enviados', fee:'Taxa MRV (USD)', certifyAlert:'Por favor, certifique que suas informações estão corretas antes de enviar.', processing:'Processando...', paymentFailed:'O pagamento não foi concluído. Tente novamente.' }
@@ -225,7 +238,15 @@ pt: {
     t3t:'Atendimento Biométrico', t3d:'Cadastro biométrico agendado ou concluído.',
     t4t:'Solicitação em Análise', t4d:'Um oficial consular está analisando sua solicitação.',
     t5t:'Decisão Final', t5d:'Visto aprovado ou negado — verifique seu e-mail para detalhes.',
-    statusLabels:{ pending_payment:'Pagamento Pendente', payment_received:'Pagamento Recebido', biometric_scheduled:'Biometria Agendada', under_review:'Em Análise', approved:'Aprovado', denied:'Negado' }
+    statusLabels:{ pending_both:'Pagamento e Biometria Pendentes', paid_pending_bio:'Pagamento Recebido', bio_pending_paid:'Biometria Agendada', under_review:'Em Análise', approved:'Aprovado', denied:'Negado' },
+    payNowBtn:'Pagar Taxa da Solicitação →', alreadyPaid:'✅ Taxa da solicitação já paga',
+    msgPendingBoth:'Sua taxa ainda não foi paga e a verificação biométrica ainda não foi concluída. Você pode concluir qualquer uma das etapas primeiro.',
+    msgPaidPendingBio:'✅ Pagamento recebido. Prossiga para concluir sua verificação biométrica.',
+    msgBioPendingPay:'✅ Verificação biométrica concluída. Sua taxa ainda não foi paga.',
+    msgUnderReview:'🔍 As duas etapas foram concluídas. Sua solicitação está sendo analisada por um oficial consular.',
+    msgApproved:'✅ Seu visto foi aprovado! Ele será entregue em:',
+    msgDenied:'❌ Sua solicitação de visto foi negada.',
+    goBiometricBtn:'Concluir Verificação Biométrica →'
   },
   biometric: {
     title:'Atendimento Biométrico', subtitle:'Agende seu cadastro de impressão digital e foto em uma Embaixada ou Consulado dos EUA perto de você.',
@@ -242,6 +263,7 @@ pt: {
     confirmBtn:'Confirmar Atendimento Biométrico →',
     notFound:'Solicitação não encontrada. Verifique seu número de referência.',
     feeRequired:'O pagamento da taxa deve ser concluído antes de agendar a biometria.', completePayment:'Concluir pagamento →',
+    payReminder:'Você ainda não pagou a taxa da solicitação — pode fazer isso quando quiser na página de Acompanhar Status. Você ainda pode concluir a verificação biométrica agora.',
     alreadyScheduled:'Seu atendimento biométrico já está agendado.',
     confirmedTitle:'Atendimento Confirmado', emailSent:'Um e-mail de confirmação foi enviado. Chegue com 15 minutos de antecedência com todos os documentos necessários.',
     trackBtn:'Acompanhar Solicitação'
@@ -328,6 +350,8 @@ es: {
     nextBio:'Reservar Biometría', nextBioD:'Programa tu cita de huellas dactilares y foto en una Embajada de EE. UU.',
     nextTrack:'Rastrear Estado', nextTrackD:'Monitorea tu solicitud usando tu número de referencia.',
     trackBtn:'Rastrear Mi Solicitud', bookBtn:'Reservar Biometría →',
+    payNowBtn:'💳 Pagar Tarifa Ahora', payLaterBtn:'Pagaré Después', payLaterNote:'No hay problema — tu número de referencia está guardado. Vuelve cuando quieras y paga desde la página de Rastrear Estado.',
+    paidConfirmed:'✅ Pago recibido. Ya puedes continuar con la verificación biométrica.',
     docs:{ passport:'Página de Datos del Pasaporte', photo:'Foto Tipo Pasaporte', financial:'Estados de Cuenta / Comprobante Financiero', employment:'Carta de Empleo / Comprobante de Matrícula', itinerary:'Itinerario de Viaje / Reserva de Hotel', sponsor_letter:'Carta del Patrocinador (si aplica)',
       notUploaded:'No subido', uploading:'Subiendo...', uploaded:'Subido', failed:'Falló — reintentar', uploadBtn:'Subir', tooLarge:'Archivo demasiado grande. El máximo es 5MB.', fillRequired:'Por favor completa todos los campos requeridos.' },
     review:{ fullName:'Nombre Completo', dob:'Fecha de Nacimiento', citizenship:'Ciudadanía', email:'Correo Electrónico', phone:'Teléfono', passportNum:'Núm. de Pasaporte', passportExpiry:'Vencimiento del Pasaporte', visaCategory:'Categoría de Visa', purpose:'Propósito', arrival:'Fecha de Llegada', departure:'Fecha de Salida', docsUploaded:'Documentos Subidos', fee:'Tarifa MRV (USD)', certifyAlert:'Por favor certifica que tu información es correcta antes de enviar.', processing:'Procesando...', paymentFailed:'El pago no se completó. Inténtalo de nuevo.' }
@@ -345,7 +369,15 @@ es: {
     t3t:'Cita Biométrica', t3d:'Registro biométrico programado o completado.',
     t4t:'Solicitud en Revisión', t4d:'Un oficial consular está revisando tu solicitud.',
     t5t:'Decisión Final', t5d:'Visa aprobada o denegada — revisa tu correo para más detalles.',
-    statusLabels:{ pending_payment:'Pago Pendiente', payment_received:'Pago Recibido', biometric_scheduled:'Biometría Programada', under_review:'En Revisión', approved:'Aprobada', denied:'Denegada' }
+    statusLabels:{ pending_both:'Pago y Biometría Pendientes', paid_pending_bio:'Pago Recibido', bio_pending_paid:'Biometría Programada', under_review:'En Revisión', approved:'Aprobada', denied:'Denegada' },
+    payNowBtn:'Pagar Tarifa de Solicitud →', alreadyPaid:'✅ Tarifa de solicitud ya pagada',
+    msgPendingBoth:'Tu tarifa aún no se ha pagado y la verificación biométrica aún no se ha completado. Puedes completar cualquiera de los dos pasos primero.',
+    msgPaidPendingBio:'✅ Pago recibido. Por favor continúa con tu verificación biométrica.',
+    msgBioPendingPay:'✅ Verificación biométrica completa. Tu tarifa aún no se ha pagado.',
+    msgUnderReview:'🔍 Ambos pasos están completos. Tu solicitud está siendo revisada por un oficial consular.',
+    msgApproved:'✅ ¡Tu visa ha sido aprobada! Se entregará en:',
+    msgDenied:'❌ Tu solicitud de visa fue denegada.',
+    goBiometricBtn:'Completar Verificación Biométrica →'
   },
   biometric: {
     title:'Cita Biométrica', subtitle:'Programa tu registro de huellas dactilares y foto en una Embajada o Consulado de EE. UU. cerca de ti.',
@@ -362,6 +394,7 @@ es: {
     confirmBtn:'Confirmar Cita Biométrica →',
     notFound:'Solicitud no encontrada. Verifica tu número de referencia.',
     feeRequired:'El pago de la tarifa debe completarse antes de programar la biometría.', completePayment:'Completar pago →',
+    payReminder:'Aún no has pagado tu tarifa de solicitud — puedes hacerlo cuando quieras desde la página de Rastrear Estado. Aún puedes completar la verificación biométrica ahora.',
     alreadyScheduled:'Tu cita biométrica ya está programada.',
     confirmedTitle:'Cita Confirmada', emailSent:'Se ha enviado un correo de confirmación. Llega 15 minutos antes con todos los documentos requeridos.',
     trackBtn:'Rastrear Solicitud'

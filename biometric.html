@@ -380,17 +380,12 @@ window.lookupApp = async function(){
       return;
     }
     currentApp = {ref, ...snap.data()};
-    if(!currentApp.feePaid){
-      msg.innerHTML = `<p style="text-align:center;color:var(--red);padding:16px">⚠️ ${t('biometric.feeRequired',L)} <a href="apply.html" style="color:var(--blue)">${t('biometric.completePayment',L)}</a></p>`;
-      document.getElementById('bookingArea').style.display='none';
-      return;
-    }
     if(currentApp.biometricScheduled){
       msg.innerHTML = `<p style="text-align:center;color:var(--green);padding:16px">✅ ${t('biometric.alreadyScheduled',L)} (${currentApp.biometricDate||''}, ${currentApp.biometricLocation||''})</p>`;
       document.getElementById('bookingArea').style.display='none';
       return;
     }
-    msg.innerHTML = '';
+    msg.innerHTML = currentApp.feePaid ? '' : `<p style="text-align:center;color:var(--amber, #9a6b00);padding:12px;font-size:13px">ℹ️ ${t('biometric.payReminder',L)}</p>`;
     document.getElementById('bookingArea').style.display='block';
     buildLocations();
     buildCalendar();
@@ -469,7 +464,6 @@ window.confirmBooking = async function(){
     Object.entries(capturedShots).forEach(([k,v])=>{ if(v.url) biometricPhotos[k] = v.url; });
 
     await setDoc(doc(db,'visa_applications',currentApp.ref),{
-      status:'biometric_scheduled',
       biometricScheduled:true,
       biometricLocation:selectedLoc.name,
       biometricDate:selectedDate,
