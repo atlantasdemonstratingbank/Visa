@@ -15,6 +15,11 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 .nav-brand strong{font-family:var(--serif);font-size:15px}
 .nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px}
 .nav-back:hover{color:#fff}
+.lang-switch{display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:var(--radius);padding:3px;margin-left:14px}
+.lang-switch-btn{background:none;border:none;color:rgba(255,255,255,.65);font-size:11px;font-weight:700;padding:6px 9px;border-radius:4px;cursor:pointer;letter-spacing:.3px}
+.lang-switch-btn.active{background:var(--gold);color:var(--blue)}
+.lang-switch-btn:hover:not(.active){color:#fff}
+.nav-right{display:flex;align-items:center}
 
 .main{max-width:760px;margin:0 auto;padding:50px 20px 70px}
 .page-title{text-align:center;margin-bottom:36px}
@@ -72,32 +77,40 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 </head>
 <body>
 
-<div class="gov-banner">🇺🇸 An official website of the United States Government — U.S. Department of State</div>
+<div class="gov-banner">🇺🇸 <span data-i18n="gov">An official website of the United States Government</span> — U.S. Department of State</div>
 <nav>
   <a href="index.html" class="nav-brand">
     <svg width="32" height="32" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#C9A84C" opacity=".15" stroke="#C9A84C" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="30" fill="#C9A84C" font-family="serif">★</text></svg>
     <strong>U.S. Visa Portal</strong>
   </a>
-  <a href="index.html" class="nav-back">← Back to Home</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back" data-i18n="nav.back">← Back to Home</a>
+    <div class="lang-switch">
+      <button class="lang-switch-btn" data-lang="en" onclick="setLanguage('en');searchAppIfLoaded()">EN</button>
+      <button class="lang-switch-btn" data-lang="pt" onclick="setLanguage('pt');searchAppIfLoaded()">PT</button>
+      <button class="lang-switch-btn" data-lang="es" onclick="setLanguage('es');searchAppIfLoaded()">ES</button>
+    </div>
+  </div>
 </nav>
 
 <div class="main">
   <div class="page-title">
-    <h1>Track Your Application</h1>
-    <p>Enter your reference number to view real-time application status.</p>
+    <h1 data-i18n="status.title">Track Your Application</h1>
+    <p data-i18n="status.subtitle">Enter your reference number to view real-time application status.</p>
   </div>
 
   <div class="search-card">
     <div class="search-row">
-      <input type="text" id="refInput" placeholder="e.g. US-2024-A1B2C3" maxlength="20"/>
-      <button onclick="searchApp()">Track Status</button>
+      <input type="text" id="refInput" placeholder="e.g. US-2024-A1B2C3" data-i18n-placeholder="status.placeholder" maxlength="20"/>
+      <button onclick="searchApp()" data-i18n="status.trackBtn">Track Status</button>
     </div>
-    <div class="search-hint">Your reference number was provided after submitting your application.</div>
+    <div class="search-hint" data-i18n="status.hint">Your reference number was provided after submitting your application.</div>
   </div>
 
   <div id="resultArea"></div>
 </div>
 
+<script src="i18n.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -106,49 +119,55 @@ const FB = {apiKey:"AIzaSyAQbiR_7vvcUlr0nr3NKQ2csjh-iwe0rhY",authDomain:"visa-35
 const app = initializeApp(FB);
 const db = getFirestore(app);
 
-const STAGES = [
-  {key:'submitted', title:'Application Submitted', desc:'Your DS-160 application has been received.'},
-  {key:'payment_received', title:'Fee Payment Confirmed', desc:'MRV fee payment has been processed successfully.'},
-  {key:'biometric_scheduled', title:'Biometric Appointment', desc:'Biometric enrollment scheduled or completed.'},
-  {key:'under_review', title:'Application Under Review', desc:'Consular officer is reviewing your application.'},
-  {key:'decision', title:'Final Decision', desc:'Visa approved or denied — check email for details.'}
-];
+function getStages(){
+  const L = getCurrentLang();
+  return [
+    {key:'submitted', title:t('status.t1t',L), desc:t('status.t1d',L)},
+    {key:'payment_received', title:t('status.t2t',L), desc:t('status.t2d',L)},
+    {key:'biometric_scheduled', title:t('status.t3t',L), desc:t('status.t3d',L)},
+    {key:'under_review', title:t('status.t4t',L), desc:t('status.t4d',L)},
+    {key:'decision', title:t('status.t5t',L), desc:t('status.t5d',L)}
+  ];
+}
 
-const STATUS_LABELS = {
-  pending_payment:'Pending Payment',
-  payment_received:'Payment Received',
-  biometric_scheduled:'Biometric Scheduled',
-  under_review:'Under Review',
-  approved:'Approved',
-  denied:'Denied'
-};
+function getStatusLabels(){
+  return TRANSLATIONS[getCurrentLang()].status.statusLabels;
+}
 
 window.searchApp = async function(){
   const ref = document.getElementById('refInput').value.trim().toUpperCase();
   const resultArea = document.getElementById('resultArea');
+  const L = getCurrentLang();
   if(!ref){ document.getElementById('refInput').focus(); return; }
   resultArea.style.display='block';
-  resultArea.innerHTML = '<div class="loading">⏳ Searching for your application...</div>';
+  resultArea.innerHTML = '<div class="loading">⏳ '+t('status.trackBtn',L)+'...</div>';
   try{
     const snap = await getDoc(doc(db,'visa_applications',ref));
     if(!snap.exists()){
-      resultArea.innerHTML = `<div class="result-card"><div class="not-found"><div class="icon">🔍</div><strong>No application found</strong><p style="margin-top:6px;font-size:13px">Please check your reference number and try again.</p></div></div>`;
+      resultArea.innerHTML = `<div class="result-card"><div class="not-found"><div class="icon">🔍</div><strong>${t('status.notFound',L)}</strong><p style="margin-top:6px;font-size:13px">${t('status.notFoundD',L)}</p></div></div>`;
       return;
     }
     renderResult(snap.data());
   } catch(e){
-    resultArea.innerHTML = `<div class="result-card"><div class="not-found"><div class="icon">⚠️</div><strong>Unable to retrieve application</strong><p style="margin-top:6px;font-size:13px">Please try again in a moment.</p></div></div>`;
+    resultArea.innerHTML = `<div class="result-card"><div class="not-found"><div class="icon">⚠️</div><strong>${t('status.error',L)}</strong><p style="margin-top:6px;font-size:13px">${t('status.errorD',L)}</p></div></div>`;
   }
 };
 
+// Re-run search with new language after a switch, if a result is already showing
+window.searchAppIfLoaded = function(){
+  if(document.getElementById('refInput').value.trim()) searchApp();
+};
+
 function renderResult(d){
+  const L = getCurrentLang();
+  const STATUS_LABELS = getStatusLabels();
   const status = d.status || 'pending_payment';
   const stageIndex = {
     pending_payment:0, payment_received:1, biometric_scheduled:2,
     under_review:3, approved:4, denied:4
   }[status] ?? 0;
 
-  const timelineHtml = STAGES.map((s,i)=>{
+  const timelineHtml = getStages().map((s,i)=>{
     let cls = '';
     if(i < stageIndex) cls = 'complete';
     else if(i === stageIndex) cls = 'active';
@@ -171,26 +190,26 @@ function renderResult(d){
       </div>
       <div class="timeline">${timelineHtml}</div>
       <div class="detail-grid">
-        <div class="detail-item"><div class="dl">Visa Category</div><div class="dv">${d.visaType||'—'}</div></div>
-        <div class="detail-item"><div class="dl">Submitted</div><div class="dv">${d.createdAt? new Date(d.createdAt.seconds*1000).toLocaleDateString() : '—'}</div></div>
-        <div class="detail-item"><div class="dl">Fee Status</div><div class="dv">${d.feePaid?'✅ Paid':'⏳ Pending'}</div></div>
-        <div class="detail-item"><div class="dl">Biometric</div><div class="dv">${d.biometricScheduled?'✅ Scheduled':'⏳ Not scheduled'}</div></div>
+        <div class="detail-item"><div class="dl">${t('status.visaCategory',L)}</div><div class="dv">${d.visaType||'—'}</div></div>
+        <div class="detail-item"><div class="dl">${t('status.submitted',L)}</div><div class="dv">${d.createdAt? new Date(d.createdAt.seconds*1000).toLocaleDateString() : '—'}</div></div>
+        <div class="detail-item"><div class="dl">${t('status.feeStatus',L)}</div><div class="dv">${d.feePaid?'✅ '+t('status.paid',L):'⏳ '+t('status.pending',L)}</div></div>
+        <div class="detail-item"><div class="dl">${t('status.bioStatus',L)}</div><div class="dv">${d.biometricScheduled?'✅ '+t('status.scheduled',L):'⏳ '+t('status.notScheduled',L)}</div></div>
       </div>
       <div class="actions-row">
-        ${!d.biometricScheduled ? `<a href="biometric.html?ref=${d.ref}" class="btn btn-blue">Schedule Biometric →</a>` : ''}
-        <a href="index.html" class="btn btn-outline">Back to Home</a>
+        ${!d.biometricScheduled ? `<a href="biometric.html?ref=${d.ref}" class="btn btn-blue">${t('status.scheduleBtn',L)}</a>` : ''}
+        <a href="index.html" class="btn btn-outline">${t('status.homeBtn',L)}</a>
       </div>
     </div>
   `;
 }
 
-// Auto-search if ref in URL
+// Detect/apply language first, then auto-search if ref in URL
 const urlRef = new URLSearchParams(window.location.search).get('ref');
-if(urlRef){
-  document.getElementById('refInput').value = urlRef;
-  window.addEventListener('DOMContentLoaded', ()=>searchApp());
-  searchApp();
-}
+if(urlRef) document.getElementById('refInput').value = urlRef;
+
+initI18n().then(()=>{
+  if(urlRef) searchApp();
+});
 
 document.getElementById('refInput').addEventListener('keydown', e=>{ if(e.key==='Enter') searchApp(); });
 </script>

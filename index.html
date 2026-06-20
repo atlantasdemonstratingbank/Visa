@@ -43,6 +43,10 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 .nav-cta:hover{background:#a00826!important}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
 .hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px}
+.lang-switch{display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:var(--radius);padding:3px}
+.lang-switch-btn{background:none;border:none;color:rgba(255,255,255,.65);font-size:11px;font-weight:700;padding:6px 9px;border-radius:4px;cursor:pointer;letter-spacing:.3px}
+.lang-switch-btn.active{background:var(--gold);color:var(--blue)}
+.lang-switch-btn:hover:not(.active){color:#fff}
 
 /* ── HERO ── */
 .hero{background:linear-gradient(135deg,var(--blue) 0%,#001a52 60%,#0a0a2a 100%);min-height:560px;display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 24px;position:relative;overflow:hidden}
@@ -139,7 +143,7 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
 <!-- GOV BANNER -->
 <div class="gov-banner">
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#aaa" stroke-width="1.2"/><path d="M8 5v4l2.5 1.5" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/></svg>
-  An official website of the United States Government &nbsp;|&nbsp;
+  <span data-i18n="gov">An official website of the United States Government</span> &nbsp;|&nbsp;
   <strong style="color:#fff">usa.gov</strong>
 </div>
 
@@ -158,11 +162,16 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
     </div>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="index.html">Home</a>
-    <a href="apply.html">Apply</a>
-    <a href="status.html">Track Status</a>
-    <a href="biometric.html">Biometric</a>
-    <a href="apply.html" class="nav-cta">Start Application →</a>
+    <a href="index.html" data-i18n="nav.home">Home</a>
+    <a href="apply.html" data-i18n="nav.apply">Apply</a>
+    <a href="status.html" data-i18n="nav.status">Track Status</a>
+    <a href="biometric.html" data-i18n="nav.biometric">Biometric</a>
+    <a href="apply.html" class="nav-cta" data-i18n="nav.startApp">Start Application →</a>
+    <div class="lang-switch">
+      <button class="lang-switch-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+      <button class="lang-switch-btn" data-lang="pt" onclick="setLanguage('pt')">PT</button>
+      <button class="lang-switch-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
+    </div>
   </div>
   <div class="hamburger" onclick="toggleNav()">
     <span></span><span></span><span></span>
@@ -178,16 +187,16 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
     <text x="100" y="170" text-anchor="middle" font-size="9" fill="white" letter-spacing="3" font-family="sans-serif">UNITED STATES OF AMERICA</text>
   </svg>
   <div class="hero-content">
-    <p class="hero-eyebrow">🇺🇸 Official U.S. Visa Processing Portal</p>
-    <h1 class="hero-title">Your Journey to the<br/><em>United States</em> Begins Here</h1>
-    <p class="hero-subtitle">Apply for your U.S. visa, upload required documents, pay your fees, and schedule your biometric appointment — all in one secure portal.</p>
+    <p class="hero-eyebrow">🇺🇸 <span data-i18n="hero.eyebrow">Official U.S. Visa Processing Portal</span></p>
+    <h1 class="hero-title"><span data-i18n="hero.title1">Your Journey to the</span><br/><em data-i18n="hero.title2">United States</em> <span data-i18n="hero.titleEnd">Begins Here</span></h1>
+    <p class="hero-subtitle" data-i18n="hero.subtitle">Apply for your U.S. visa, upload required documents, pay your fees, and schedule your biometric appointment — all in one secure portal.</p>
     <div class="hero-actions">
-      <a href="apply.html" class="btn btn-primary">▶ Start Your Application</a>
-      <a href="#visa-types" class="btn btn-outline">View Visa Types</a>
+      <a href="apply.html" class="btn btn-primary" data-i18n="hero.startBtn">▶ Start Your Application</a>
+      <a href="#visa-types" class="btn btn-outline" data-i18n="hero.viewBtn">View Visa Types</a>
     </div>
     <div class="hero-status">
-      <input type="text" id="trackInput" placeholder="Enter Reference No. e.g. US-2024-XXXXXX" maxlength="20"/>
-      <button class="btn-track" onclick="trackFromHome()">Track →</button>
+      <input type="text" id="trackInput" placeholder="Enter Reference No. e.g. US-2024-XXXXXX" data-i18n-placeholder="hero.trackPlaceholder" maxlength="20"/>
+      <button class="btn-track" onclick="trackFromHome()" data-i18n="hero.trackBtn">Track →</button>
     </div>
   </div>
 </section>
@@ -195,40 +204,40 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
 <!-- ALERT -->
 <div class="alert-strip">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-  <span><strong>Notice:</strong> All visa applicants must complete biometric enrollment at a designated U.S. Embassy or Consulate. Appointments can be scheduled through this portal after fee payment.</span>
+  <span data-i18n="alert">Notice: All visa applicants must complete biometric enrollment at a designated U.S. Embassy or Consulate. Appointments can be scheduled through this portal after fee payment.</span>
 </div>
 
 <!-- HOW IT WORKS -->
 <section class="section">
   <div class="container">
-    <p class="section-label">Application Process</p>
-    <h2 class="section-title">How the Visa Process Works</h2>
-    <p class="section-subtitle">A straightforward five-step process from application to approval.</p>
+    <p class="section-label" data-i18n="steps.label">Application Process</p>
+    <h2 class="section-title" data-i18n="steps.title">How the Visa Process Works</h2>
+    <p class="section-subtitle" data-i18n="steps.subtitle">A straightforward five-step process from application to approval.</p>
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-num">1</div>
-        <div class="step-title">Complete Application</div>
-        <p class="step-desc">Fill out the DS-160 online nonimmigrant visa application form with your personal information.</p>
+        <div class="step-title" data-i18n="steps.s1t">Complete Application</div>
+        <p class="step-desc" data-i18n="steps.s1d">Fill out the DS-160 online nonimmigrant visa application form with your personal information.</p>
       </div>
       <div class="step-card">
         <div class="step-num">2</div>
-        <div class="step-title">Upload Documents</div>
-        <p class="step-desc">Submit your passport, photo, financial statements, and supporting documents securely.</p>
+        <div class="step-title" data-i18n="steps.s2t">Upload Documents</div>
+        <p class="step-desc" data-i18n="steps.s2d">Submit your passport, photo, financial statements, and supporting documents securely.</p>
       </div>
       <div class="step-card">
         <div class="step-num">3</div>
-        <div class="step-title">Pay Visa Fee</div>
-        <p class="step-desc">Pay the non-refundable MRV fee online. Fees vary by visa category and nationality.</p>
+        <div class="step-title" data-i18n="steps.s3t">Pay Visa Fee</div>
+        <p class="step-desc" data-i18n="steps.s3d">Pay the non-refundable MRV fee online. Fees vary by visa category and nationality.</p>
       </div>
       <div class="step-card">
         <div class="step-num">4</div>
-        <div class="step-title">Biometric Enrollment</div>
-        <p class="step-desc">Schedule and attend your biometric appointment at the nearest U.S. Embassy or Consulate.</p>
+        <div class="step-title" data-i18n="steps.s4t">Biometric Enrollment</div>
+        <p class="step-desc" data-i18n="steps.s4d">Schedule and attend your biometric appointment at the nearest U.S. Embassy or Consulate.</p>
       </div>
       <div class="step-card">
         <div class="step-num">5</div>
-        <div class="step-title">Visa Decision</div>
-        <p class="step-desc">Receive your visa decision via email and track your passport delivery through this portal.</p>
+        <div class="step-title" data-i18n="steps.s5t">Visa Decision</div>
+        <p class="step-desc" data-i18n="steps.s5d">Receive your visa decision via email and track your passport delivery through this portal.</p>
       </div>
     </div>
   </div>
@@ -237,45 +246,45 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
 <!-- VISA TYPES -->
 <section class="section section-alt" id="visa-types">
   <div class="container">
-    <p class="section-label">Visa Categories</p>
-    <h2 class="section-title">Select Your Visa Type</h2>
-    <p class="section-subtitle">Choose the category that best matches your purpose of travel to the United States.</p>
+    <p class="section-label" data-i18n="visaTypes.label">Visa Categories</p>
+    <h2 class="section-title" data-i18n="visaTypes.title">Select Your Visa Type</h2>
+    <p class="section-subtitle" data-i18n="visaTypes.subtitle">Choose the category that best matches your purpose of travel to the United States.</p>
     <div class="visa-grid">
       <a href="apply.html?type=B1B2" class="visa-card">
         <span class="visa-badge">B-1/B-2</span>
-        <h3>Visitor Visa</h3>
-        <p>For tourism, business meetings, medical treatment, or visiting friends and family.</p>
-        <div class="visa-fee">MRV Fee: $185 USD</div>
+        <h3 data-i18n="visaTypes.b1b2t">Visitor Visa</h3>
+        <p data-i18n="visaTypes.b1b2d">For tourism, business meetings, medical treatment, or visiting friends and family.</p>
+        <div class="visa-fee"><span data-i18n="visaTypes.fee">MRV Fee</span>: $<span id="fee-B1B2">185</span> USD</div>
       </a>
       <a href="apply.html?type=F1" class="visa-card">
         <span class="visa-badge">F-1</span>
-        <h3>Student Visa</h3>
-        <p>For academic studies at accredited U.S. universities, colleges, and language programs.</p>
-        <div class="visa-fee">MRV Fee: $185 USD</div>
+        <h3 data-i18n="visaTypes.f1t">Student Visa</h3>
+        <p data-i18n="visaTypes.f1d">For academic studies at accredited U.S. universities, colleges, and language programs.</p>
+        <div class="visa-fee"><span data-i18n="visaTypes.fee">MRV Fee</span>: $<span id="fee-F1">185</span> USD</div>
       </a>
       <a href="apply.html?type=H1B" class="visa-card">
         <span class="visa-badge">H-1B</span>
-        <h3>Work Visa</h3>
-        <p>For specialty occupation workers sponsored by a U.S. employer in a qualifying field.</p>
-        <div class="visa-fee">MRV Fee: $190 USD</div>
+        <h3 data-i18n="visaTypes.h1bt">Work Visa</h3>
+        <p data-i18n="visaTypes.h1bd">For specialty occupation workers sponsored by a U.S. employer in a qualifying field.</p>
+        <div class="visa-fee"><span data-i18n="visaTypes.fee">MRV Fee</span>: $<span id="fee-H1B">190</span> USD</div>
       </a>
       <a href="apply.html?type=J1" class="visa-card">
         <span class="visa-badge">J-1</span>
-        <h3>Exchange Visitor</h3>
-        <p>For exchange programs, research scholars, professors, au pairs, and camp counselors.</p>
-        <div class="visa-fee">MRV Fee: $160 USD</div>
+        <h3 data-i18n="visaTypes.j1t">Exchange Visitor</h3>
+        <p data-i18n="visaTypes.j1d">For exchange programs, research scholars, professors, au pairs, and camp counselors.</p>
+        <div class="visa-fee"><span data-i18n="visaTypes.fee">MRV Fee</span>: $<span id="fee-J1">160</span> USD</div>
       </a>
       <a href="apply.html?type=O1" class="visa-card">
         <span class="visa-badge">O-1</span>
-        <h3>Extraordinary Ability</h3>
-        <p>For individuals with extraordinary ability or achievement in sciences, arts, education, business or athletics.</p>
-        <div class="visa-fee">MRV Fee: $460 USD</div>
+        <h3 data-i18n="visaTypes.o1t">Extraordinary Ability</h3>
+        <p data-i18n="visaTypes.o1d">For individuals with extraordinary ability or achievement in sciences, arts, education, business or athletics.</p>
+        <div class="visa-fee"><span data-i18n="visaTypes.fee">MRV Fee</span>: $<span id="fee-O1">460</span> USD</div>
       </a>
       <a href="apply.html?type=L1" class="visa-card">
         <span class="visa-badge">L-1</span>
-        <h3>Intracompany Transfer</h3>
-        <p>For managers, executives, or specialized knowledge workers transferred within the same company.</p>
-        <div class="visa-fee">MRV Fee: $460 USD</div>
+        <h3 data-i18n="visaTypes.l1t">Intracompany Transfer</h3>
+        <p data-i18n="visaTypes.l1d">For managers, executives, or specialized knowledge workers transferred within the same company.</p>
+        <div class="visa-fee"><span data-i18n="visaTypes.fee">MRV Fee</span>: $<span id="fee-L1">460</span> USD</div>
       </a>
     </div>
   </div>
@@ -284,38 +293,38 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
 <!-- FEATURES -->
 <section class="section">
   <div class="container">
-    <p class="section-label">Portal Features</p>
-    <h2 class="section-title">Everything You Need, Online</h2>
+    <p class="section-label" data-i18n="features.label">Portal Features</p>
+    <h2 class="section-title" data-i18n="features.title">Everything You Need, Online</h2>
     <div class="features-grid">
       <div class="feat">
         <span class="feat-icon">🔒</span>
-        <h3>Secure & Encrypted</h3>
-        <p>All data is encrypted end-to-end. Your personal information is protected under U.S. federal privacy law.</p>
+        <h3 data-i18n="features.f1t">Secure & Encrypted</h3>
+        <p data-i18n="features.f1d">All data is encrypted end-to-end. Your personal information is protected under U.S. federal privacy law.</p>
       </div>
       <div class="feat">
         <span class="feat-icon">📄</span>
-        <h3>Document Upload</h3>
-        <p>Upload passport scans, photos, financial statements, and supporting documents in PDF, JPG, or PNG format.</p>
+        <h3 data-i18n="features.f2t">Document Upload</h3>
+        <p data-i18n="features.f2d">Upload passport scans, photos, financial statements, and supporting documents in PDF, JPG, or PNG format.</p>
       </div>
       <div class="feat">
         <span class="feat-icon">💳</span>
-        <h3>Online Fee Payment</h3>
-        <p>Pay your MRV fee securely using international cards, bank transfers, or mobile payment options.</p>
+        <h3 data-i18n="features.f3t">Online Fee Payment</h3>
+        <p data-i18n="features.f3d">Pay your MRV fee securely using international cards, bank transfers, or mobile payment options.</p>
       </div>
       <div class="feat">
         <span class="feat-icon">📅</span>
-        <h3>Biometric Scheduling</h3>
-        <p>Book your biometric appointment at any U.S. Embassy or Consulate after completing your application.</p>
+        <h3 data-i18n="features.f4t">Biometric Scheduling</h3>
+        <p data-i18n="features.f4d">Book your biometric appointment at any U.S. Embassy or Consulate after completing your application.</p>
       </div>
       <div class="feat">
         <span class="feat-icon">📍</span>
-        <h3>Real-Time Tracking</h3>
-        <p>Monitor your application status at every stage using your unique reference number.</p>
+        <h3 data-i18n="features.f5t">Real-Time Tracking</h3>
+        <p data-i18n="features.f5d">Monitor your application status at every stage using your unique reference number.</p>
       </div>
       <div class="feat">
         <span class="feat-icon">🌐</span>
-        <h3>24/7 Availability</h3>
-        <p>Start or continue your application at any time from anywhere in the world.</p>
+        <h3 data-i18n="features.f6t">24/7 Availability</h3>
+        <p data-i18n="features.f6d">Start or continue your application at any time from anywhere in the world.</p>
       </div>
     </div>
   </div>
@@ -323,9 +332,9 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
 
 <!-- CTA BAND -->
 <section class="cta-band">
-  <h2>Ready to Start Your U.S. Visa Application?</h2>
-  <p>Complete your application online in under 30 minutes. Have your passport and travel plans ready.</p>
-  <a href="apply.html" class="btn btn-white">Begin Application Now →</a>
+  <h2 data-i18n="cta.title">Ready to Start Your U.S. Visa Application?</h2>
+  <p data-i18n="cta.subtitle">Complete your application online in under 30 minutes. Have your passport and travel plans ready.</p>
+  <a href="apply.html" class="btn btn-white" data-i18n="cta.btn">Begin Application Now →</a>
 </section>
 
 <!-- FOOTER -->
@@ -333,35 +342,57 @@ footer{background:#0d1a35;color:rgba(255,255,255,.6);padding:48px 24px 24px}
   <div class="footer-grid">
     <div class="footer-brand">
       <strong>U.S. Visa Processing Portal</strong>
-      <p>An official service of the U.S. Department of State, Bureau of Consular Affairs.</p>
+      <p data-i18n="footer.desc">An official service of the U.S. Department of State, Bureau of Consular Affairs.</p>
     </div>
     <div class="footer-col">
-      <h4>Apply</h4>
-      <a href="apply.html">New Application</a>
-      <a href="status.html">Track Application</a>
-      <a href="biometric.html">Biometric Appointment</a>
+      <h4 data-i18n="footer.applyH">Apply</h4>
+      <a href="apply.html" data-i18n="footer.newApp">New Application</a>
+      <a href="status.html" data-i18n="footer.trackApp">Track Application</a>
+      <a href="biometric.html" data-i18n="footer.bookBio">Biometric Appointment</a>
     </div>
     <div class="footer-col">
-      <h4>Visa Types</h4>
+      <h4 data-i18n="footer.typesH">Visa Types</h4>
       <a href="apply.html?type=B1B2">Visitor (B-1/B-2)</a>
       <a href="apply.html?type=F1">Student (F-1)</a>
       <a href="apply.html?type=H1B">Work (H-1B)</a>
       <a href="apply.html?type=J1">Exchange (J-1)</a>
     </div>
     <div class="footer-col">
-      <h4>Resources</h4>
-      <a href="#">Required Documents</a>
-      <a href="#">Fee Schedule</a>
-      <a href="#">Embassy Locations</a>
-      <a href="#">FAQs</a>
+      <h4 data-i18n="footer.resourcesH">Resources</h4>
+      <a href="#" data-i18n="footer.docsLink">Required Documents</a>
+      <a href="#" data-i18n="footer.feeLink">Fee Schedule</a>
+      <a href="#" data-i18n="footer.embassyLink">Embassy Locations</a>
+      <a href="#" data-i18n="footer.faqLink">FAQs</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2024 U.S. Department of State. This is an official U.S. Government website. | <a href="#" style="color:rgba(255,255,255,.5)">Privacy Policy</a> | <a href="#" style="color:rgba(255,255,255,.5)">Accessibility</a></p>
+    <p>© 2024 U.S. Department of State. <span data-i18n="footer.bottom">This is an official U.S. Government website.</span> | <a href="#" style="color:rgba(255,255,255,.5)" data-i18n="footer.privacy">Privacy Policy</a> | <a href="#" style="color:rgba(255,255,255,.5)" data-i18n="footer.accessibility">Accessibility</a></p>
   </div>
 </footer>
 
-<script>
+<script src="i18n.js"></script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const FB = {apiKey:"AIzaSyAQbiR_7vvcUlr0nr3NKQ2csjh-iwe0rhY",authDomain:"visa-3504e.firebaseapp.com",projectId:"visa-3504e",storageBucket:"visa-3504e.firebasestorage.app",messagingSenderId:"618621727677",appId:"1:618621727677:web:72dccc703c97a5c739d8d4"};
+const fbApp = initializeApp(FB);
+const db = getFirestore(fbApp);
+
+// Pull admin-configured pricing, if set, to keep homepage fees in sync with the application form
+(async function loadFees(){
+  try{
+    const snap = await getDoc(doc(db,'settings','fees'));
+    if(snap.exists()){
+      const fees = snap.data();
+      Object.entries(fees).forEach(([type, amount])=>{
+        const el = document.getElementById('fee-'+type);
+        if(el) el.textContent = amount;
+      });
+    }
+  } catch(e){ /* keep default displayed prices */ }
+})();
+
 function toggleNav(){
   document.getElementById('navLinks').classList.toggle('open');
 }
@@ -373,6 +404,9 @@ function trackFromHome(){
 document.getElementById('trackInput').addEventListener('keydown',e=>{
   if(e.key==='Enter') trackFromHome();
 });
+window.toggleNav = toggleNav;
+window.trackFromHome = trackFromHome;
+initI18n();
 </script>
 </body>
 </html>

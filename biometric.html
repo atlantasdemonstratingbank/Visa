@@ -15,6 +15,11 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 .nav-brand strong{font-family:var(--serif);font-size:15px}
 .nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px}
 .nav-back:hover{color:#fff}
+.lang-switch{display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:var(--radius);padding:3px;margin-left:14px}
+.lang-switch-btn{background:none;border:none;color:rgba(255,255,255,.65);font-size:11px;font-weight:700;padding:6px 9px;border-radius:4px;cursor:pointer;letter-spacing:.3px}
+.lang-switch-btn.active{background:var(--gold);color:var(--blue)}
+.lang-switch-btn:hover:not(.active){color:#fff}
+.nav-right{display:flex;align-items:center}
 
 .main{max-width:840px;margin:0 auto;padding:50px 20px 70px}
 .page-title{text-align:center;margin-bottom:36px}
@@ -101,28 +106,35 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 </head>
 <body>
 
-<div class="gov-banner">🇺🇸 An official website of the United States Government — U.S. Department of State</div>
+<div class="gov-banner">🇺🇸 <span data-i18n="gov">An official website of the United States Government</span> — U.S. Department of State</div>
 <nav>
   <a href="index.html" class="nav-brand">
     <svg width="32" height="32" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#C9A84C" opacity=".15" stroke="#C9A84C" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="30" fill="#C9A84C" font-family="serif">★</text></svg>
     <strong>U.S. Visa Portal</strong>
   </a>
-  <a href="index.html" class="nav-back">← Back to Home</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back" data-i18n="nav.back">← Back to Home</a>
+    <div class="lang-switch">
+      <button class="lang-switch-btn" data-lang="en" onclick="setLanguage('en');refreshCamText()">EN</button>
+      <button class="lang-switch-btn" data-lang="pt" onclick="setLanguage('pt');refreshCamText()">PT</button>
+      <button class="lang-switch-btn" data-lang="es" onclick="setLanguage('es');refreshCamText()">ES</button>
+    </div>
+  </div>
 </nav>
 
 <div class="main">
   <div class="page-title">
-    <h1>📷 Biometric Appointment</h1>
-    <p>Schedule your fingerprint and photo enrollment at a U.S. Embassy or Consulate near you.</p>
+    <h1>📷 <span data-i18n="biometric.title">Biometric Appointment</span></h1>
+    <p data-i18n="biometric.subtitle">Schedule your fingerprint and photo enrollment at a U.S. Embassy or Consulate near you.</p>
   </div>
 
   <div class="lookup-card">
     <div class="lookup-row">
       <div class="field">
-        <label>Application Reference Number</label>
+        <label data-i18n="biometric.refLabel">Application Reference Number</label>
         <input type="text" id="refInput" placeholder="e.g. US-2024-A1B2C3"/>
       </div>
-      <button onclick="lookupApp()">Find Application</button>
+      <button onclick="lookupApp()" data-i18n="biometric.findBtn">Find Application</button>
     </div>
   </div>
 
@@ -130,17 +142,17 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 
   <div id="bookingArea">
     <div class="notice">
-      ℹ️ Biometric appointments require <strong>fee payment to be completed</strong>. Bring your passport and printed confirmation to your appointment.
+      ℹ️ <span data-i18n="biometric.notice">Biometric appointments require fee payment to be completed. Bring your passport and printed confirmation to your appointment.</span>
     </div>
 
     <div class="card">
-      <div class="card-title">📷 1. Biometric Photo Capture</div>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Complete a quick guided photo capture. You'll be asked to look straight, turn your head, and blink — this is reviewed by an officer before your in-person appointment.</p>
+      <div class="card-title">📷 1. <span data-i18n="biometric.captureTitle">Biometric Photo Capture</span></div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:18px" data-i18n="biometric.captureSub">Complete a quick guided photo capture. You'll be asked to look straight, turn your head, and blink — this is reviewed by an officer before your in-person appointment.</p>
 
       <div id="camNotStarted" class="cam-not-started">
         <div class="icon">🎥</div>
-        <p>Camera access is required for biometric photo capture. Your photos are stored securely and only visible to consular staff.</p>
-        <button class="cam-start-btn" onclick="startCamera()">Enable Camera →</button>
+        <p data-i18n="biometric.camNotice">Camera access is required for biometric photo capture. Your photos are stored securely and only visible to consular staff.</p>
+        <button class="cam-start-btn" onclick="startCamera()" data-i18n="biometric.enableCam">Enable Camera →</button>
       </div>
 
       <div id="camStage" style="display:none">
@@ -164,37 +176,38 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
     </div>
 
     <div class="card">
-      <div class="card-title">📍 2. Select Embassy / Consulate</div>
+      <div class="card-title">📍 2. <span data-i18n="biometric.locTitle">Select Embassy / Consulate</span></div>
       <div class="location-grid" id="locGrid"></div>
     </div>
 
     <div class="card">
-      <div class="card-title">📅 3. Select Date</div>
+      <div class="card-title">📅 3. <span data-i18n="biometric.dateTitle">Select Date</span></div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
 
     <div class="card">
-      <div class="card-title">🕐 4. Select Time</div>
+      <div class="card-title">🕐 4. <span data-i18n="biometric.timeTitle">Select Time</span></div>
       <div class="time-grid" id="timeGrid"></div>
     </div>
 
     <div class="card">
-      <div class="card-title">📋 What to Bring</div>
+      <div class="card-title">📋 <span data-i18n="biometric.bringTitle">What to Bring</span></div>
       <ul class="checklist">
-        <li>Valid passport (original)</li>
-        <li>Printed appointment confirmation</li>
-        <li>Application reference number</li>
-        <li>Visa fee payment receipt</li>
-        <li>One passport-style photograph</li>
+        <li data-i18n="biometric.bring1">Valid passport (original)</li>
+        <li data-i18n="biometric.bring2">Printed appointment confirmation</li>
+        <li data-i18n="biometric.bring3">Application reference number</li>
+        <li data-i18n="biometric.bring4">Visa fee payment receipt</li>
+        <li data-i18n="biometric.bring5">One passport-style photograph</li>
       </ul>
     </div>
 
-    <button class="btn btn-primary" id="confirmBtn" onclick="confirmBooking()" disabled>Confirm Biometric Appointment →</button>
+    <button class="btn btn-primary" id="confirmBtn" onclick="confirmBooking()" disabled data-i18n="biometric.confirmBtn">Confirm Biometric Appointment →</button>
   </div>
 
   <div id="confirmArea" style="display:none"></div>
 </div>
 
+<script src="i18n.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -212,12 +225,15 @@ let camStepIndex = 0;
 let captureComplete = false;
 const capturedShots = {}; // stepId -> {dataUrl, url}
 
-const CAPTURE_STEPS = [
-  {id:'front', icon:'😐', instruction:'Look straight at the camera'},
-  {id:'right', icon:'👉', instruction:'Slowly turn your head to the right'},
-  {id:'left',  icon:'👈', instruction:'Slowly turn your head to the left'},
-  {id:'blink', icon:'😉', instruction:'Blink both eyes, then look straight'}
-];
+function getCaptureSteps(){
+  const L = getCurrentLang();
+  return [
+    {id:'front', icon:'😐', instruction:t('biometric.iFront',L)},
+    {id:'right', icon:'👉', instruction:t('biometric.iRight',L)},
+    {id:'left',  icon:'👈', instruction:t('biometric.iLeft',L)},
+    {id:'blink', icon:'😉', instruction:t('biometric.iBlink',L)}
+  ];
+}
 
 const LOCATIONS = [
   {id:'lagos', name:'U.S. Embassy — Lagos', addr:'2 Walter Carrington Cres, Victoria Island'},
@@ -244,14 +260,14 @@ window.startCamera = async function(){
 };
 
 function renderCamStep(){
-  const step = CAPTURE_STEPS[camStepIndex];
+  const step = getCaptureSteps()[camStepIndex];
   if(!step) return;
   document.getElementById('camIcon').textContent = step.icon;
   document.getElementById('camInstruction').textContent = step.instruction;
 }
 
 function renderCamProgress(){
-  document.getElementById('camProgress').innerHTML = CAPTURE_STEPS.map((s,i)=>{
+  document.getElementById('camProgress').innerHTML = getCaptureSteps().map((s,i)=>{
     let cls = '';
     if(capturedShots[s.id]) cls = 'done';
     else if(i===camStepIndex) cls = 'current';
@@ -260,7 +276,7 @@ function renderCamProgress(){
 }
 
 function renderCamThumbs(){
-  document.getElementById('camThumbs').innerHTML = CAPTURE_STEPS.map(s=>{
+  document.getElementById('camThumbs').innerHTML = getCaptureSteps().map(s=>{
     const shot = capturedShots[s.id];
     return shot
       ? `<div class="cam-thumb"><img src="${shot.dataUrl}"/></div>`
@@ -268,8 +284,14 @@ function renderCamThumbs(){
   }).join('');
 }
 
+// Re-render any visible camera step text after a manual language switch
+window.refreshCamText = function(){
+  if(document.getElementById('camStage').style.display !== 'none'){ renderCamStep(); renderCamProgress(); }
+  if(captureComplete) finishCapture();
+};
+
 window.captureStep = async function(){
-  const step = CAPTURE_STEPS[camStepIndex];
+  const step = getCaptureSteps()[camStepIndex];
   const video = document.getElementById('camVideo');
   const canvas = document.getElementById('camCanvas');
   const btn = document.getElementById('camCaptureBtn');
@@ -298,7 +320,7 @@ window.captureStep = async function(){
     btn.disabled = false;
   }, 'image/jpeg', 0.85);
 
-  if(camStepIndex < CAPTURE_STEPS.length - 1){
+  if(camStepIndex < getCaptureSteps().length - 1){
     camStepIndex++;
     renderCamStep();
     renderCamProgress();
@@ -319,9 +341,10 @@ window.retakeCapture = async function(){
 
 function finishCapture(){
   document.getElementById('camStage').style.display='none';
+  const L = getCurrentLang();
   document.getElementById('camCompleteBanner').innerHTML = `
-    <div class="cam-complete-banner">✅ Biometric photo capture complete</div>
-    <div class="cam-retake"><button onclick="retakeCapture()">Retake photos</button></div>
+    <div class="cam-complete-banner">✅ ${t('biometric.captureComplete',L)}</div>
+    <div class="cam-retake"><button onclick="retakeCapture()">${t('biometric.retake',L)}</button></div>
   `;
   if(camStream){ camStream.getTracks().forEach(t=>t.stop()); }
   checkReady();
@@ -335,7 +358,7 @@ function waitForUploads(maxMs=6000){
   const start = Date.now();
   return new Promise(resolve=>{
     const check = ()=>{
-      const allDone = CAPTURE_STEPS.every(s=> capturedShots[s.id] && capturedShots[s.id].url);
+      const allDone = getCaptureSteps().every(s=> capturedShots[s.id] && capturedShots[s.id].url);
       if(allDone || Date.now()-start > maxMs) return resolve();
       setTimeout(check, 200);
     };
@@ -347,22 +370,23 @@ window.lookupApp = async function(){
   const ref = document.getElementById('refInput').value.trim().toUpperCase();
   const msg = document.getElementById('lookupMsg');
   if(!ref) return;
-  msg.innerHTML = '<p style="text-align:center;color:var(--muted);padding:16px">⏳ Looking up application...</p>';
+  msg.innerHTML = '<p style="text-align:center;color:var(--muted);padding:16px">⏳ ...</p>';
+  const L = getCurrentLang();
   try{
     const snap = await getDoc(doc(db,'visa_applications',ref));
     if(!snap.exists()){
-      msg.innerHTML = '<p style="text-align:center;color:var(--red);padding:16px">Application not found. Please check your reference number.</p>';
+      msg.innerHTML = `<p style="text-align:center;color:var(--red);padding:16px">${t('biometric.notFound',L)}</p>`;
       document.getElementById('bookingArea').style.display='none';
       return;
     }
     currentApp = {ref, ...snap.data()};
     if(!currentApp.feePaid){
-      msg.innerHTML = '<p style="text-align:center;color:var(--red);padding:16px">⚠️ Fee payment must be completed before scheduling biometrics. <a href="apply.html" style="color:var(--blue)">Complete payment →</a></p>';
+      msg.innerHTML = `<p style="text-align:center;color:var(--red);padding:16px">⚠️ ${t('biometric.feeRequired',L)} <a href="apply.html" style="color:var(--blue)">${t('biometric.completePayment',L)}</a></p>`;
       document.getElementById('bookingArea').style.display='none';
       return;
     }
     if(currentApp.biometricScheduled){
-      msg.innerHTML = `<p style="text-align:center;color:var(--green);padding:16px">✅ Your biometric appointment is already scheduled for ${currentApp.biometricDate||''} at ${currentApp.biometricLocation||''}.</p>`;
+      msg.innerHTML = `<p style="text-align:center;color:var(--green);padding:16px">✅ ${t('biometric.alreadyScheduled',L)} (${currentApp.biometricDate||''}, ${currentApp.biometricLocation||''})</p>`;
       document.getElementById('bookingArea').style.display='none';
       return;
     }
@@ -372,7 +396,7 @@ window.lookupApp = async function(){
     buildCalendar();
     buildTimes();
   } catch(e){
-    msg.innerHTML = '<p style="text-align:center;color:var(--red);padding:16px">Error retrieving application. Please try again.</p>';
+    msg.innerHTML = `<p style="text-align:center;color:var(--red);padding:16px">${t('status.error',L)}</p>`;
   }
 };
 
@@ -436,9 +460,10 @@ function checkReady(){
 
 window.confirmBooking = async function(){
   const btn = document.getElementById('confirmBtn');
-  btn.disabled = true; btn.textContent = 'Finalizing photos...';
+  const L = getCurrentLang();
+  btn.disabled = true; btn.textContent = '...';
   await waitForUploads();
-  btn.textContent = 'Booking...';
+  btn.textContent = '...';
   try{
     const biometricPhotos = {};
     Object.entries(capturedShots).forEach(([k,v])=>{ if(v.url) biometricPhotos[k] = v.url; });
@@ -459,32 +484,34 @@ window.confirmBooking = async function(){
     document.getElementById('confirmArea').innerHTML = `
       <div class="confirm-card">
         <div class="confirm-icon">✅</div>
-        <h2 style="font-family:var(--serif);font-size:24px;color:var(--blue)">Appointment Confirmed</h2>
+        <h2 style="font-family:var(--serif);font-size:24px;color:var(--blue)">${t('biometric.confirmedTitle',L)}</h2>
         <div class="confirm-detail">
           <div><strong>Reference:</strong> ${currentApp.ref}</div>
-          <div><strong>Location:</strong> ${selectedLoc.name}</div>
+          <div><strong>${t('biometric.locTitle',L)}:</strong> ${selectedLoc.name}</div>
           <div><strong>Address:</strong> ${selectedLoc.addr}</div>
-          <div><strong>Date:</strong> ${new Date(selectedDate).toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
-          <div><strong>Time:</strong> ${selectedTime}</div>
+          <div><strong>${t('biometric.dateTitle',L)}:</strong> ${new Date(selectedDate).toLocaleDateString(L==='pt'?'pt-PT':L==='es'?'es-ES':'en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+          <div><strong>${t('biometric.timeTitle',L)}:</strong> ${selectedTime}</div>
         </div>
-        <p style="font-size:12px;color:var(--muted)">A confirmation email has been sent. Please arrive 15 minutes early with all required documents.</p>
+        <p style="font-size:12px;color:var(--muted)">${t('biometric.emailSent',L)}</p>
         <div style="display:flex;gap:12px;justify-content:center;margin-top:24px">
-          <a href="status.html?ref=${currentApp.ref}" class="btn btn-primary" style="width:auto;text-decoration:none;display:inline-block">Track Application</a>
+          <a href="status.html?ref=${currentApp.ref}" class="btn btn-primary" style="width:auto;text-decoration:none;display:inline-block">${t('biometric.trackBtn',L)}</a>
         </div>
       </div>
     `;
   } catch(e){
     alert('Failed to confirm appointment. Please try again.');
-    btn.disabled = false; btn.textContent = 'Confirm Biometric Appointment →';
+    btn.disabled = false; btn.textContent = t('biometric.confirmBtn',L);
   }
 };
 
-// Auto-lookup if ref in URL
+// Detect/apply language first, then auto-lookup if ref in URL
 const urlRef = new URLSearchParams(window.location.search).get('ref');
-if(urlRef){
-  document.getElementById('refInput').value = urlRef;
-  lookupApp();
-}
+if(urlRef) document.getElementById('refInput').value = urlRef;
+
+initI18n().then(()=>{
+  if(urlRef) lookupApp();
+});
+
 document.getElementById('refInput').addEventListener('keydown', e=>{ if(e.key==='Enter') lookupApp(); });
 </script>
 </body>

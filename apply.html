@@ -15,6 +15,11 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 .nav-brand strong{font-family:var(--serif);font-size:15px}
 .nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px}
 .nav-back:hover{color:#fff}
+.lang-switch{display:flex;gap:4px;background:rgba(255,255,255,.08);border-radius:var(--radius);padding:3px;margin-left:14px}
+.lang-switch-btn{background:none;border:none;color:rgba(255,255,255,.65);font-size:11px;font-weight:700;padding:6px 9px;border-radius:4px;cursor:pointer;letter-spacing:.3px}
+.lang-switch-btn.active{background:var(--gold);color:var(--blue)}
+.lang-switch-btn:hover:not(.active){color:#fff}
+.nav-right{display:flex;align-items:center}
 
 /* PROGRESS BAR */
 .progress-wrap{background:#fff;border-bottom:1px solid var(--border);padding:0 24px}
@@ -84,24 +89,31 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
 </head>
 <body>
 
-<div class="gov-banner">🇺🇸 An official website of the United States Government — U.S. Department of State</div>
+<div class="gov-banner">🇺🇸 <span data-i18n="gov">An official website of the United States Government</span> — U.S. Department of State</div>
 <nav>
   <a href="index.html" class="nav-brand">
     <svg width="32" height="32" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#C9A84C" opacity=".15" stroke="#C9A84C" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="30" fill="#C9A84C" font-family="serif">★</text></svg>
     <strong>U.S. Visa Portal</strong>
   </a>
-  <a href="index.html" class="nav-back">← Back to Home</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back" data-i18n="nav.back">← Back to Home</a>
+    <div class="lang-switch">
+      <button class="lang-switch-btn" data-lang="en" onclick="setLanguage('en');refreshDynamicText()">EN</button>
+      <button class="lang-switch-btn" data-lang="pt" onclick="setLanguage('pt');refreshDynamicText()">PT</button>
+      <button class="lang-switch-btn" data-lang="es" onclick="setLanguage('es');refreshDynamicText()">ES</button>
+    </div>
+  </div>
 </nav>
 
 <!-- PROGRESS -->
 <div class="progress-wrap">
   <div class="progress-inner">
     <div class="progress-steps" id="progressSteps">
-      <div class="p-step active" data-step="0"><div class="p-dot" id="dot0">1</div><span class="p-label">Personal Info</span><div class="p-line"></div></div>
-      <div class="p-step" data-step="1"><div class="p-dot" id="dot1">2</div><span class="p-label">Travel Info</span><div class="p-line"></div></div>
-      <div class="p-step" data-step="2"><div class="p-dot" id="dot2">3</div><span class="p-label">Background</span><div class="p-line"></div></div>
-      <div class="p-step" data-step="3"><div class="p-dot" id="dot3">4</div><span class="p-label">Documents</span><div class="p-line"></div></div>
-      <div class="p-step" data-step="4"><div class="p-dot" id="dot4">✓</div><span class="p-label">Review</span></div>
+      <div class="p-step active" data-step="0"><div class="p-dot" id="dot0">1</div><span class="p-label" data-i18n="apply.pTitle">Personal Info</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="1"><div class="p-dot" id="dot1">2</div><span class="p-label" data-i18n="apply.travelTitle">Travel Info</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="2"><div class="p-dot" id="dot2">3</div><span class="p-label" data-i18n="apply.bgTitle">Background</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="3"><div class="p-dot" id="dot3">4</div><span class="p-label" data-i18n="apply.docTitle">Documents</span><div class="p-line"></div></div>
+      <div class="p-step" data-step="4"><div class="p-dot" id="dot4">✓</div><span class="p-label" data-i18n="apply.reviewTitle">Review</span></div>
     </div>
   </div>
 </div>
@@ -117,178 +129,178 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
   <!-- STEP 1: PERSONAL INFO -->
   <div class="form-step active" id="step0">
     <div class="card">
-      <div class="card-title"><span>👤</span> Personal Information</div>
-      <div class="card-sub">Enter your name exactly as it appears on your passport.</div>
+      <div class="card-title"><span>👤</span> <span data-i18n="apply.pTitle">Personal Information</span></div>
+      <div class="card-sub" data-i18n="apply.pSub">Enter your name exactly as it appears on your passport.</div>
       <div class="row row-3">
-        <div class="field"><label>Surname / Last Name <span class="req">*</span></label><input type="text" id="lastName" placeholder="SMITH"/><div class="hint">As in passport, capital letters</div></div>
-        <div class="field"><label>First / Given Name <span class="req">*</span></label><input type="text" id="firstName" placeholder="JOHN"/></div>
-        <div class="field"><label>Middle Name</label><input type="text" id="middleName" placeholder="Optional"/></div>
+        <div class="field"><label data-i18n="apply.lastName">Surname / Last Name</label><span class="req"> *</span><input type="text" id="lastName" placeholder="SMITH"/><div class="hint">As in passport, capital letters</div></div>
+        <div class="field"><label data-i18n="apply.firstName">First / Given Name</label><span class="req"> *</span><input type="text" id="firstName" placeholder="JOHN"/></div>
+        <div class="field"><label data-i18n="apply.middleName">Middle Name</label><input type="text" id="middleName" placeholder="Optional"/></div>
       </div>
       <div class="row row-2">
-        <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="dob"/></div>
-        <div class="field"><label>Gender <span class="req">*</span></label>
+        <div class="field"><label data-i18n="apply.dob">Date of Birth</label><span class="req"> *</span><input type="date" id="dob"/></div>
+        <div class="field"><label data-i18n="apply.gender">Gender</label><span class="req"> *</span>
           <select id="gender"><option value="">Select...</option><option>Male</option><option>Female</option><option>Non-binary</option></select>
         </div>
       </div>
       <div class="row row-2">
-        <div class="field"><label>Country of Birth <span class="req">*</span></label><input type="text" id="birthCountry" placeholder="e.g. Nigeria"/></div>
-        <div class="field"><label>Country of Citizenship <span class="req">*</span></label><input type="text" id="citizenship" placeholder="e.g. Nigeria"/></div>
+        <div class="field"><label data-i18n="apply.birthCountry">Country of Birth</label><span class="req"> *</span><input type="text" id="birthCountry" placeholder="e.g. Nigeria"/></div>
+        <div class="field"><label data-i18n="apply.citizenship">Country of Citizenship</label><span class="req"> *</span><input type="text" id="citizenship" placeholder="e.g. Nigeria"/></div>
       </div>
       <hr class="section-divider"/>
-      <div class="card-title"><span>📧</span> Contact Information</div>
-      <div class="card-sub" style="margin-top:8px">Your primary email will be used for all official correspondence.</div>
+      <div class="card-title"><span>📧</span> <span data-i18n="apply.contactTitle">Contact Information</span></div>
+      <div class="card-sub" style="margin-top:8px" data-i18n="apply.contactSub">Your primary email will be used for all official correspondence.</div>
       <div class="row row-2">
-        <div class="field"><label>Email Address <span class="req">*</span></label><input type="email" id="email" placeholder="you@example.com"/></div>
-        <div class="field"><label>Phone Number <span class="req">*</span></label><input type="tel" id="phone" placeholder="+1 234 567 8900"/></div>
+        <div class="field"><label data-i18n="apply.email">Email Address</label><span class="req"> *</span><input type="email" id="email" placeholder="you@example.com"/></div>
+        <div class="field"><label data-i18n="apply.phone">Phone Number</label><span class="req"> *</span><input type="tel" id="phone" placeholder="+1 234 567 8900"/></div>
       </div>
-      <div class="field"><label>Home Address <span class="req">*</span></label><textarea id="homeAddress" placeholder="Street address, City, Country"></textarea></div>
+      <div class="field"><label data-i18n="apply.homeAddress">Home Address</label><span class="req"> *</span><textarea id="homeAddress" placeholder="Street address, City, Country"></textarea></div>
     </div>
     <div class="card">
-      <div class="card-title"><span>📕</span> Passport Information</div>
-      <div class="card-sub">Enter details from your current, valid passport.</div>
+      <div class="card-title"><span>📕</span> <span data-i18n="apply.passportTitle">Passport Information</span></div>
+      <div class="card-sub" data-i18n="apply.passportSub">Enter details from your current, valid passport.</div>
       <div class="row row-2">
-        <div class="field"><label>Passport Number <span class="req">*</span></label><input type="text" id="passportNum" placeholder="A12345678" style="font-family:var(--mono)"/></div>
-        <div class="field"><label>Passport Type <span class="req">*</span></label>
+        <div class="field"><label data-i18n="apply.passportNum">Passport Number</label><span class="req"> *</span><input type="text" id="passportNum" placeholder="A12345678" style="font-family:var(--mono)"/></div>
+        <div class="field"><label data-i18n="apply.passportType">Passport Type</label><span class="req"> *</span>
           <select id="passportType"><option value="">Select...</option><option>Regular / Ordinary</option><option>Official</option><option>Diplomatic</option><option>Emergency</option></select>
         </div>
       </div>
       <div class="row row-3">
-        <div class="field"><label>Issue Date <span class="req">*</span></label><input type="date" id="passportIssue"/></div>
-        <div class="field"><label>Expiry Date <span class="req">*</span></label><input type="date" id="passportExpiry"/></div>
-        <div class="field"><label>Issuing Country <span class="req">*</span></label><input type="text" id="passportCountry" placeholder="e.g. Nigeria"/></div>
+        <div class="field"><label data-i18n="apply.passportIssue">Issue Date</label><span class="req"> *</span><input type="date" id="passportIssue"/></div>
+        <div class="field"><label data-i18n="apply.passportExpiry">Expiry Date</label><span class="req"> *</span><input type="date" id="passportExpiry"/></div>
+        <div class="field"><label data-i18n="apply.passportCountry">Issuing Country</label><span class="req"> *</span><input type="text" id="passportCountry" placeholder="e.g. Nigeria"/></div>
       </div>
     </div>
     <div class="form-nav">
       <span style="font-size:13px;color:var(--muted)">Step 1 of 4</span>
-      <button class="btn btn-primary" onclick="nextStep(0)">Next: Travel Info →</button>
+      <button class="btn btn-primary" onclick="nextStep(0)" data-i18n="apply.next1">Next: Travel Info →</button>
     </div>
   </div>
 
   <!-- STEP 2: TRAVEL INFO -->
   <div class="form-step" id="step1">
     <div class="card">
-      <div class="card-title"><span>✈️</span> Travel Information</div>
-      <div class="card-sub">Provide details about your intended visit to the United States.</div>
+      <div class="card-title"><span>✈️</span> <span data-i18n="apply.travelTitle">Travel Information</span></div>
+      <div class="card-sub" data-i18n="apply.travelSub">Provide details about your intended visit to the United States.</div>
       <div class="row row-2">
-        <div class="field"><label>Visa Category <span class="req">*</span></label>
+        <div class="field"><label data-i18n="apply.visaCategory">Visa Category</label><span class="req"> *</span>
           <select id="visaType"><option value="">Select category...</option><option value="B1B2">B-1/B-2 — Visitor</option><option value="F1">F-1 — Student</option><option value="H1B">H-1B — Specialty Worker</option><option value="J1">J-1 — Exchange Visitor</option><option value="O1">O-1 — Extraordinary Ability</option><option value="L1">L-1 — Intracompany Transfer</option></select>
         </div>
-        <div class="field"><label>Purpose of Visit <span class="req">*</span></label><input type="text" id="purpose" placeholder="e.g. Tourism, Business Conference"/></div>
+        <div class="field"><label data-i18n="apply.purpose">Purpose of Visit</label><span class="req"> *</span><input type="text" id="purpose" placeholder="e.g. Tourism, Business Conference"/></div>
       </div>
       <div class="row row-2">
-        <div class="field"><label>Intended Arrival Date <span class="req">*</span></label><input type="date" id="arrivalDate"/></div>
-        <div class="field"><label>Intended Departure Date <span class="req">*</span></label><input type="date" id="departureDate"/></div>
+        <div class="field"><label data-i18n="apply.arrival">Intended Arrival Date</label><span class="req"> *</span><input type="date" id="arrivalDate"/></div>
+        <div class="field"><label data-i18n="apply.departure">Intended Departure Date</label><span class="req"> *</span><input type="date" id="departureDate"/></div>
       </div>
-      <div class="field"><label>U.S. Address During Visit <span class="req">*</span></label><textarea id="usAddress" placeholder="Hotel name, street address, city, state, ZIP"></textarea></div>
+      <div class="field"><label data-i18n="apply.usAddress">U.S. Address During Visit</label><span class="req"> *</span><textarea id="usAddress" placeholder="Hotel name, street address, city, state, ZIP"></textarea></div>
       <hr class="section-divider"/>
-      <div class="card-title" style="margin-bottom:8px"><span>💰</span> Financial Information</div>
+      <div class="card-title" style="margin-bottom:8px"><span>💰</span> <span data-i18n="apply.financeTitle">Financial Information</span></div>
       <div class="row row-2">
-        <div class="field"><label>Who is paying for your trip? <span class="req">*</span></label>
+        <div class="field"><label data-i18n="apply.funder">Who is paying for your trip?</label><span class="req"> *</span>
           <select id="tripFunder"><option value="">Select...</option><option>Self</option><option>Employer / Company</option><option>Family member</option><option>Scholarship / Grant</option><option>Other</option></select>
         </div>
-        <div class="field"><label>Estimated Trip Cost (USD) <span class="req">*</span></label><input type="number" id="tripCost" placeholder="e.g. 3000"/></div>
+        <div class="field"><label data-i18n="apply.tripCost">Estimated Trip Cost (USD)</label><span class="req"> *</span><input type="number" id="tripCost" placeholder="e.g. 3000"/></div>
       </div>
-      <div class="field"><label>Do you have a U.S. sponsor? <span class="req">*</span></label>
+      <div class="field"><label data-i18n="apply.sponsorQ">Do you have a U.S. sponsor?</label><span class="req"> *</span>
         <div class="radio-group">
-          <label class="radio-opt"><input type="radio" name="hasSponsor" value="yes"/> Yes, I have a U.S. sponsor</label>
-          <label class="radio-opt"><input type="radio" name="hasSponsor" value="no" checked/> No sponsor</label>
+          <label class="radio-opt"><input type="radio" name="hasSponsor" value="yes"/> <span data-i18n="apply.sponsorYes">Yes, I have a U.S. sponsor</span></label>
+          <label class="radio-opt"><input type="radio" name="hasSponsor" value="no" checked/> <span data-i18n="apply.sponsorNo">No sponsor</span></label>
         </div>
       </div>
-      <div class="field" id="sponsorField" style="display:none"><label>Sponsor Name & Contact</label><textarea id="sponsorInfo" placeholder="Full name, address, relationship, phone number"></textarea></div>
+      <div class="field" id="sponsorField" style="display:none"><label data-i18n="apply.sponsorInfo">Sponsor Name & Contact</label><textarea id="sponsorInfo" placeholder="Full name, address, relationship, phone number"></textarea></div>
     </div>
     <div class="form-nav">
-      <button class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
-      <button class="btn btn-primary" onclick="nextStep(1)">Next: Background →</button>
+      <button class="btn btn-secondary" onclick="prevStep(1)" data-i18n="apply.back">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(1)" data-i18n="apply.next2">Next: Background →</button>
     </div>
   </div>
 
   <!-- STEP 3: BACKGROUND -->
   <div class="form-step" id="step2">
     <div class="card">
-      <div class="card-title"><span>📋</span> Background & Security Questions</div>
-      <div class="card-sub">Answer all questions truthfully. False statements may result in visa denial.</div>
-      <div class="notice">⚠️ U.S. law requires truthful answers. Misrepresentation is a federal offense under 18 U.S.C. §1001.</div>
+      <div class="card-title"><span>📋</span> <span data-i18n="apply.bgTitle">Background & Security Questions</span></div>
+      <div class="card-sub" data-i18n="apply.bgSub">Answer all questions truthfully. False statements may result in visa denial.</div>
+      <div class="notice">⚠️ <span data-i18n="apply.bgNotice">U.S. law requires truthful answers. Misrepresentation is a federal offense under 18 U.S.C. §1001.</span></div>
 
       <div class="field" style="margin-bottom:18px">
-        <label>Have you ever been refused a U.S. visa or been refused admission to the United States? <span class="req">*</span></label>
+        <label data-i18n="apply.q1">Have you ever been refused a U.S. visa or been refused admission to the United States?</label><span class="req"> *</span>
         <div class="radio-group">
-          <label class="radio-opt"><input type="radio" name="q1" value="yes"/> Yes</label>
-          <label class="radio-opt"><input type="radio" name="q1" value="no" checked/> No</label>
+          <label class="radio-opt"><input type="radio" name="q1" value="yes"/> <span data-i18n="apply.yes">Yes</span></label>
+          <label class="radio-opt"><input type="radio" name="q1" value="no" checked/> <span data-i18n="apply.no">No</span></label>
         </div>
       </div>
       <div class="field" style="margin-bottom:18px">
-        <label>Have you ever been arrested, cited, or convicted for any offense or crime, even if subject to a pardon? <span class="req">*</span></label>
+        <label data-i18n="apply.q2">Have you ever been arrested, cited, or convicted for any offense or crime, even if subject to a pardon?</label><span class="req"> *</span>
         <div class="radio-group">
-          <label class="radio-opt"><input type="radio" name="q2" value="yes"/> Yes</label>
-          <label class="radio-opt"><input type="radio" name="q2" value="no" checked/> No</label>
+          <label class="radio-opt"><input type="radio" name="q2" value="yes"/> <span data-i18n="apply.yes">Yes</span></label>
+          <label class="radio-opt"><input type="radio" name="q2" value="no" checked/> <span data-i18n="apply.no">No</span></label>
         </div>
       </div>
       <div class="field" style="margin-bottom:18px">
-        <label>Have you ever violated the terms of a U.S. visa? <span class="req">*</span></label>
+        <label data-i18n="apply.q3">Have you ever violated the terms of a U.S. visa?</label><span class="req"> *</span>
         <div class="radio-group">
-          <label class="radio-opt"><input type="radio" name="q3" value="yes"/> Yes</label>
-          <label class="radio-opt"><input type="radio" name="q3" value="no" checked/> No</label>
+          <label class="radio-opt"><input type="radio" name="q3" value="yes"/> <span data-i18n="apply.yes">Yes</span></label>
+          <label class="radio-opt"><input type="radio" name="q3" value="no" checked/> <span data-i18n="apply.no">No</span></label>
         </div>
       </div>
       <div class="field" style="margin-bottom:18px">
-        <label>Do you have a communicable disease of public health significance? <span class="req">*</span></label>
+        <label data-i18n="apply.q4">Do you have a communicable disease of public health significance?</label><span class="req"> *</span>
         <div class="radio-group">
-          <label class="radio-opt"><input type="radio" name="q4" value="yes"/> Yes</label>
-          <label class="radio-opt"><input type="radio" name="q4" value="no" checked/> No</label>
+          <label class="radio-opt"><input type="radio" name="q4" value="yes"/> <span data-i18n="apply.yes">Yes</span></label>
+          <label class="radio-opt"><input type="radio" name="q4" value="no" checked/> <span data-i18n="apply.no">No</span></label>
         </div>
       </div>
       <div class="field" style="margin-bottom:18px">
-        <label>Have you ever been a member of a terrorist organization? <span class="req">*</span></label>
+        <label data-i18n="apply.q5">Have you ever been a member of a terrorist organization?</label><span class="req"> *</span>
         <div class="radio-group">
-          <label class="radio-opt"><input type="radio" name="q5" value="yes"/> Yes</label>
-          <label class="radio-opt"><input type="radio" name="q5" value="no" checked/> No</label>
+          <label class="radio-opt"><input type="radio" name="q5" value="yes"/> <span data-i18n="apply.yes">Yes</span></label>
+          <label class="radio-opt"><input type="radio" name="q5" value="no" checked/> <span data-i18n="apply.no">No</span></label>
         </div>
       </div>
       <hr class="section-divider"/>
-      <div class="card-title" style="margin-bottom:8px"><span>💼</span> Employment Information</div>
+      <div class="card-title" style="margin-bottom:8px"><span>💼</span> <span data-i18n="apply.empTitle">Employment Information</span></div>
       <div class="row row-2">
-        <div class="field"><label>Current Occupation <span class="req">*</span></label><input type="text" id="occupation" placeholder="e.g. Software Engineer, Teacher"/></div>
-        <div class="field"><label>Employer / School Name</label><input type="text" id="employer" placeholder="e.g. Acme Corp, University of Lagos"/></div>
+        <div class="field"><label data-i18n="apply.occupation">Current Occupation</label><span class="req"> *</span><input type="text" id="occupation" placeholder="e.g. Software Engineer, Teacher"/></div>
+        <div class="field"><label data-i18n="apply.employer">Employer / School Name</label><input type="text" id="employer" placeholder="e.g. Acme Corp, University of Lagos"/></div>
       </div>
-      <div class="field"><label>Brief description of your work / studies</label><textarea id="jobDesc" placeholder="Describe your current role or field of study..."></textarea></div>
+      <div class="field"><label data-i18n="apply.jobDesc">Brief description of your work / studies</label><textarea id="jobDesc" placeholder="Describe your current role or field of study..."></textarea></div>
     </div>
     <div class="form-nav">
-      <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
-      <button class="btn btn-primary" onclick="nextStep(2)">Next: Documents →</button>
+      <button class="btn btn-secondary" onclick="prevStep(2)" data-i18n="apply.back">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(2)" data-i18n="apply.next3">Next: Documents →</button>
     </div>
   </div>
 
   <!-- STEP 4: DOCUMENTS -->
   <div class="form-step" id="step3">
     <div class="card">
-      <div class="card-title"><span>📁</span> Document Upload</div>
-      <div class="card-sub">Upload clear scans or photos. Accepted formats: PDF, JPG, PNG. Max 5MB per file.</div>
+      <div class="card-title"><span>📁</span> <span data-i18n="apply.docTitle">Document Upload</span></div>
+      <div class="card-sub" data-i18n="apply.docSub">Upload clear scans or photos. Accepted formats: PDF, JPG, PNG. Max 5MB per file.</div>
       <div id="docList"></div>
       <div id="uploadMsg" style="font-size:13px;color:var(--muted);margin-top:12px"></div>
     </div>
     <div class="form-nav">
-      <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
-      <button class="btn btn-primary" onclick="nextStep(3)">Next: Review →</button>
+      <button class="btn btn-secondary" onclick="prevStep(3)" data-i18n="apply.back">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep(3)" data-i18n="apply.next4">Next: Review →</button>
     </div>
   </div>
 
   <!-- STEP 5: REVIEW -->
   <div class="form-step" id="step4">
     <div class="card">
-      <div class="card-title"><span>✅</span> Review & Submit</div>
-      <div class="card-sub">Review your information before submitting. You will be redirected to pay the MRV fee.</div>
+      <div class="card-title"><span>✅</span> <span data-i18n="apply.reviewTitle">Review & Submit</span></div>
+      <div class="card-sub" data-i18n="apply.reviewSub">Review your information before submitting. You will be redirected to pay the MRV fee.</div>
       <div id="reviewContent" style="font-size:14px;line-height:2"></div>
       <hr class="section-divider"/>
       <div class="field" style="margin-bottom:0">
         <label class="radio-opt" style="border-color:var(--green)">
           <input type="checkbox" id="certify" style="width:16px;height:16px;accent-color:var(--green)"/>
-          <span style="font-size:13px">I certify that all information provided is true and accurate. I understand that false statements may result in visa denial and criminal prosecution.</span>
+          <span style="font-size:13px" data-i18n="apply.certify">I certify that all information provided is true and accurate. I understand that false statements may result in visa denial and criminal prosecution.</span>
         </label>
       </div>
     </div>
     <div class="form-nav">
-      <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
-      <button class="btn btn-red" onclick="submitApplication()">Submit & Pay Fee →</button>
+      <button class="btn btn-secondary" onclick="prevStep(4)" data-i18n="apply.back">← Back</button>
+      <button class="btn btn-red" onclick="submitApplication()" data-i18n="apply.submitBtn">Submit & Pay Fee →</button>
     </div>
   </div>
 
@@ -296,28 +308,29 @@ nav{background:var(--blue);padding:0 24px;display:flex;align-items:center;justif
   <div class="form-step" id="step5">
     <div class="success-card">
       <div class="success-icon">🎉</div>
-      <h2 style="font-family:var(--serif);font-size:26px;color:var(--blue)">Application Submitted Successfully</h2>
-      <p style="color:var(--muted);margin-top:8px;font-size:14px">Your reference number is:</p>
+      <h2 style="font-family:var(--serif);font-size:26px;color:var(--blue)" data-i18n="apply.successTitle">Application Submitted Successfully</h2>
+      <p style="color:var(--muted);margin-top:8px;font-size:14px" data-i18n="apply.successSub">Your reference number is:</p>
       <div class="success-ref" id="finalRef">US-2024-XXXXXX</div>
-      <p style="font-size:13px;color:var(--muted)">Save this reference number. You will need it to track your application, schedule your biometric appointment, and collect your visa.</p>
+      <p style="font-size:13px;color:var(--muted)" data-i18n="apply.successHint">Save this reference number. You will need it to track your application, schedule your biometric appointment, and collect your visa.</p>
       <div class="success-steps">
-        <div class="next-step"><strong>📧 Check Email</strong><p>Confirmation sent to your registered email address.</p></div>
-        <div class="next-step"><strong>💳 Pay MRV Fee</strong><p>Your fee payment is being processed. Check your email for receipt.</p></div>
-        <div class="next-step"><strong>📅 Book Biometric</strong><p>Schedule your fingerprint & photo appointment at a U.S. Embassy.</p></div>
-        <div class="next-step"><strong>📍 Track Status</strong><p>Monitor your application using your reference number.</p></div>
+        <div class="next-step"><strong>📧 <span data-i18n="apply.nextEmail">Check Email</span></strong><p data-i18n="apply.nextEmailD">Confirmation sent to your registered email address.</p></div>
+        <div class="next-step"><strong>💳 <span data-i18n="apply.nextPay">Pay MRV Fee</span></strong><p data-i18n="apply.nextPayD">Your fee payment is being processed. Check your email for receipt.</p></div>
+        <div class="next-step"><strong>📅 <span data-i18n="apply.nextBio">Book Biometric</span></strong><p data-i18n="apply.nextBioD">Schedule your fingerprint & photo appointment at a U.S. Embassy.</p></div>
+        <div class="next-step"><strong>📍 <span data-i18n="apply.nextTrack">Track Status</span></strong><p data-i18n="apply.nextTrackD">Monitor your application using your reference number.</p></div>
       </div>
       <div style="display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap">
-        <a href="status.html" class="btn btn-primary">Track My Application</a>
-        <a href="biometric.html" class="btn btn-secondary">Book Biometric →</a>
+        <a href="status.html" class="btn btn-primary" data-i18n="apply.trackBtn">Track My Application</a>
+        <a href="biometric.html" class="btn btn-secondary" data-i18n="apply.bookBtn">Book Biometric →</a>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Firebase + Flutterwave -->
+<script src="i18n.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const FB = {apiKey:"AIzaSyAQbiR_7vvcUlr0nr3NKQ2csjh-iwe0rhY",authDomain:"visa-3504e.firebaseapp.com",projectId:"visa-3504e",storageBucket:"visa-3504e.firebasestorage.app",messagingSenderId:"618621727677",appId:"1:618621727677:web:72dccc703c97a5c739d8d4"};
 const app = initializeApp(FB);
@@ -325,7 +338,18 @@ const db = getFirestore(app);
 
 const CLOUDINARY = {cloud_name:'dbgxllxdb', upload_preset:'efootball_screenshots'};
 const FLW_KEY = 'FLWPUBK-d1231ee5582659ed92eca52b827332f8-X';
-const FEES = {B1B2:185,F1:185,H1B:190,J1:160,O1:460,L1:460};
+let FEES = {B1B2:185,F1:185,H1B:190,J1:160,O1:460,L1:460}; // defaults — overwritten below if admin has set custom prices
+
+// Pull admin-configured pricing from Firestore (settings/fees). Falls back to defaults above if not set or unreachable.
+(async function loadFees(){
+  try{
+    const snap = await getDoc(doc(db,'settings','fees'));
+    if(snap.exists()){
+      const data = snap.data();
+      FEES = { ...FEES, ...data };
+    }
+  } catch(e){ /* keep defaults */ }
+})();
 
 let currentStep = 0;
 let appRef = '';
@@ -345,6 +369,8 @@ document.getElementById('refDisplay').textContent = `Reference: ${appRef}`;
 const urlParams = new URLSearchParams(window.location.search);
 const urlType = urlParams.get('type');
 if(urlType){ setTimeout(()=>{const el=document.getElementById('visaType');if(el)el.value=urlType;},100); }
+
+initI18n();
 
 // STEP NAVIGATION
 window.nextStep = function(from){
@@ -386,33 +412,35 @@ function validateStep(n){
       ok = false;
     }
   });
-  if(!ok) { alert('Please fill in all required fields.'); }
+  if(!ok) { alert(t('apply.docs.fillRequired',getCurrentLang())); }
   return ok;
 }
 
-// DOCUMENT UPLOADS
-const DOC_LIST = [
-  {id:'passport',label:'Passport Bio Page',required:true},
-  {id:'photo',label:'Passport-Style Photo',required:true},
-  {id:'financial',label:'Bank Statements / Financial Proof',required:true},
-  {id:'employment',label:'Employment Letter / Enrollment Proof',required:false},
-  {id:'itinerary',label:'Travel Itinerary / Hotel Booking',required:false},
-  {id:'sponsor_letter',label:'Sponsor Letter (if applicable)',required:false},
-];
+function getDocList(){
+  const L = getCurrentLang();
+  return [
+    {id:'passport',label:t('apply.docs.passport',L),required:true},
+    {id:'photo',label:t('apply.docs.photo',L),required:true},
+    {id:'financial',label:t('apply.docs.financial',L),required:true},
+    {id:'employment',label:t('apply.docs.employment',L),required:false},
+    {id:'itinerary',label:t('apply.docs.itinerary',L),required:false},
+    {id:'sponsor_letter',label:t('apply.docs.sponsor_letter',L),required:false},
+  ];
+}
 
 function buildDocUploads(){
   const wrap = document.getElementById('docList');
-  if(wrap.innerHTML) return;
-  wrap.innerHTML = DOC_LIST.map(d=>`
+  const L = getCurrentLang();
+  wrap.innerHTML = getDocList().map(d=>`
     <div style="border:1.5px dashed var(--border);border-radius:8px;padding:16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px" id="doc-wrap-${d.id}">
       <div>
         <div style="font-size:14px;font-weight:600;color:var(--text)">${d.label} ${d.required?'<span style="color:var(--red)">*</span>':''}</div>
         <div style="font-size:12px;color:var(--muted)">PDF, JPG, PNG — max 5MB</div>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
-        <span id="doc-status-${d.id}" style="font-size:12px;color:var(--muted)">Not uploaded</span>
+        <span id="doc-status-${d.id}" style="font-size:12px;color:var(--muted)">${uploadedDocs[d.id]?'✅ '+t('apply.docs.uploaded',L):t('apply.docs.notUploaded',L)}</span>
         <label style="background:var(--blue);color:#fff;padding:8px 16px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-weight:600">
-          Upload <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="uploadDoc('${d.id}',this)"/>
+          ${t('apply.docs.uploadBtn',L)} <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="uploadDoc('${d.id}',this)"/>
         </label>
       </div>
     </div>
@@ -421,10 +449,11 @@ function buildDocUploads(){
 
 window.uploadDoc = async function(id, input){
   const file = input.files[0];
+  const L = getCurrentLang();
   if(!file) return;
-  if(file.size > 5*1024*1024){ alert('File too large. Maximum is 5MB.'); return; }
+  if(file.size > 5*1024*1024){ alert(t('apply.docs.tooLarge',L)); return; }
   const status = document.getElementById('doc-status-'+id);
-  status.textContent = '⏳ Uploading...'; status.style.color='var(--muted)';
+  status.textContent = '⏳ '+t('apply.docs.uploading',L); status.style.color='var(--muted)';
   try{
     const fd = new FormData();
     fd.append('file', file);
@@ -434,45 +463,53 @@ window.uploadDoc = async function(id, input){
     const data = await res.json();
     if(data.secure_url){
       uploadedDocs[id] = data.secure_url;
-      status.textContent = '✅ Uploaded';
+      status.textContent = '✅ '+t('apply.docs.uploaded',L);
       status.style.color = 'var(--green)';
       document.getElementById('doc-wrap-'+id).style.borderColor='var(--green)';
     } else { throw new Error('Upload failed'); }
   } catch(e){
-    status.textContent = '❌ Failed — retry';
+    status.textContent = '❌ '+t('apply.docs.failed',L);
     status.style.color = 'var(--red)';
   }
 };
 
 function buildReview(){
+  const L = getCurrentLang();
   const v = id=>document.getElementById(id)?.value||'—';
   document.getElementById('reviewContent').innerHTML = `
     <table style="width:100%;border-collapse:collapse;font-size:13px">
-      ${row('Full Name',`${v('firstName')} ${v('middleName')} ${v('lastName')}`)}
-      ${row('Date of Birth',v('dob'))}
-      ${row('Citizenship',v('citizenship'))}
-      ${row('Email',v('email'))}
-      ${row('Phone',v('phone'))}
-      ${row('Passport No.',v('passportNum'))}
-      ${row('Passport Expiry',v('passportExpiry'))}
-      ${row('Visa Category',v('visaType'))}
-      ${row('Purpose',v('purpose'))}
-      ${row('Arrival Date',v('arrivalDate'))}
-      ${row('Departure Date',v('departureDate'))}
-      ${row('Documents Uploaded',Object.keys(uploadedDocs).length+' / '+DOC_LIST.length)}
-      ${row('MRV Fee (USD)','$'+(FEES[v('visaType')]||185))}
+      ${row(t('apply.review.fullName',L),`${v('firstName')} ${v('middleName')} ${v('lastName')}`)}
+      ${row(t('apply.review.dob',L),v('dob'))}
+      ${row(t('apply.review.citizenship',L),v('citizenship'))}
+      ${row(t('apply.review.email',L),v('email'))}
+      ${row(t('apply.review.phone',L),v('phone'))}
+      ${row(t('apply.review.passportNum',L),v('passportNum'))}
+      ${row(t('apply.review.passportExpiry',L),v('passportExpiry'))}
+      ${row(t('apply.review.visaCategory',L),v('visaType'))}
+      ${row(t('apply.review.purpose',L),v('purpose'))}
+      ${row(t('apply.review.arrival',L),v('arrivalDate'))}
+      ${row(t('apply.review.departure',L),v('departureDate'))}
+      ${row(t('apply.review.docsUploaded',L),Object.keys(uploadedDocs).length+' / '+getDocList().length)}
+      ${row(t('apply.review.fee',L),'$'+(FEES[v('visaType')]||185))}
     </table>
   `;
 }
 function row(k,v){ return `<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 4px;color:var(--muted);font-weight:600;width:40%">${k}</td><td style="padding:8px 4px">${v}</td></tr>`; }
 
+// Re-render any visible dynamic content (doc list / review table) after a manual language switch
+window.refreshDynamicText = function(){
+  if(currentStep===3) buildDocUploads();
+  if(currentStep===4) buildReview();
+};
+
 // SUBMIT
 window.submitApplication = async function(){
+  const L = getCurrentLang();
   if(!document.getElementById('certify').checked){
-    alert('Please certify that your information is accurate before submitting.'); return;
+    alert(t('apply.review.certifyAlert',L)); return;
   }
   const btn = event.target;
-  btn.disabled=true; btn.textContent='Processing...';
+  btn.disabled=true; btn.textContent=t('apply.review.processing',L);
   const visa = document.getElementById('visaType').value||'B1B2';
   const fee = FEES[visa]||185;
   const email = document.getElementById('email').value;
@@ -522,12 +559,12 @@ window.submitApplication = async function(){
         document.getElementById('finalRef').textContent = appRef;
         goStep(5);
       } else {
-        btn.disabled=false; btn.textContent='Submit & Pay Fee →';
-        alert('Payment was not completed. Please try again.');
+        btn.disabled=false; btn.textContent=t('apply.submitBtn',L);
+        alert(t('apply.review.paymentFailed',L));
       }
     },
     onclose: function(){
-      btn.disabled=false; btn.textContent='Submit & Pay Fee →';
+      btn.disabled=false; btn.textContent=t('apply.submitBtn',L);
     }
   });
 };
