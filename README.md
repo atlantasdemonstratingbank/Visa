@@ -22,6 +22,13 @@ There's also a manual EN / PT / ES switcher in the nav on every page — once so
 ## New: Admin-configurable pricing
 Visa fees are no longer hardcoded. `apply.html` and the homepage both read current pricing from a `settings/fees` Firestore document, which your admin panel's **Manage Pricing** screen writes to. If that document doesn't exist yet (e.g. before you've saved pricing once from the admin panel), built-in defaults are used as a fallback — nothing breaks.
 
+## New: Visa approval PDF
+Once an application is approved, a **Download Visa Document** button appears on Track Status. It generates a 2-page PDF (cover/approval letter + a plain-background details page with the applicant's biometric photo) using `visa-pdf.js`, loaded via the jsPDF CDN library.
+
+Every page carries a tiled "SANDBOX — NOT FOR REAL USE" watermark, a red "not an official document" header banner, and an explicit disclaimer box. The details page intentionally has no security-pattern background artwork and no machine-readable zone (MRZ) — the bottom of that page has a plain, clearly-labeled reference line instead. This is meant to look like a contest demo document, not something that could function as a real one — please don't strip these safeguards out.
+
+Positions for the photo, the details block, and the reference line are admin-configurable — see Layout Editor in the admin README.
+
 ## New: Pay later, any order
 Submitting the application form no longer forces immediate payment. After submitting, the applicant gets their reference number right away, with a **Pay Now** button (optional) on the success screen. They can skip it and pay anytime later from the Track Status page.
 
@@ -63,6 +70,12 @@ service cloud.firestore {
     }
 
     match /settings/fees {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email == 'viccylay30@gmail.com';
+    }
+
+    match /settings/visaLayout {
       allow read: if true;
       allow write: if request.auth != null
                    && request.auth.token.email == 'viccylay30@gmail.com';

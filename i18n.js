@@ -115,7 +115,8 @@ en: {
     msgUnderReview:'🔍 Both steps are complete. Your application is being verified by a consular officer.',
     msgApproved:'✅ Your visa has been approved! It will be delivered to:',
     msgDenied:'❌ Your visa application was denied.',
-    goBiometricBtn:'Complete Biometric Verification →'
+    goBiometricBtn:'Complete Biometric Verification →',
+    downloadVisaBtn:'Download Visa Document'
   },
   biometric: {
     title:'Biometric Appointment', subtitle:'Schedule your fingerprint and photo enrollment at a U.S. Embassy or Consulate near you.',
@@ -246,7 +247,8 @@ pt: {
     msgUnderReview:'🔍 As duas etapas foram concluídas. Sua solicitação está sendo analisada por um oficial consular.',
     msgApproved:'✅ Seu visto foi aprovado! Ele será entregue em:',
     msgDenied:'❌ Sua solicitação de visto foi negada.',
-    goBiometricBtn:'Concluir Verificação Biométrica →'
+    goBiometricBtn:'Concluir Verificação Biométrica →',
+    downloadVisaBtn:'Baixar Documento de Visto'
   },
   biometric: {
     title:'Atendimento Biométrico', subtitle:'Agende seu cadastro de impressão digital e foto em uma Embaixada ou Consulado dos EUA perto de você.',
@@ -377,7 +379,8 @@ es: {
     msgUnderReview:'🔍 Ambos pasos están completos. Tu solicitud está siendo revisada por un oficial consular.',
     msgApproved:'✅ ¡Tu visa ha sido aprobada! Se entregará en:',
     msgDenied:'❌ Tu solicitud de visa fue denegada.',
-    goBiometricBtn:'Completar Verificación Biométrica →'
+    goBiometricBtn:'Completar Verificación Biométrica →',
+    downloadVisaBtn:'Descargar Documento de Visa'
   },
   biometric: {
     title:'Cita Biométrica', subtitle:'Programa tu registro de huellas dactilares y foto en una Embajada o Consulado de EE. UU. cerca de ti.',

@@ -525,12 +525,18 @@ window.submitApplication = async function(){
 
   const visa = document.getElementById('visaType').value||'B1B2';
   const email = document.getElementById('email').value;
-  const name = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
+  const middleName = document.getElementById('middleName').value;
+  const name = `${firstName} ${lastName}`;
 
   try{
     await setDoc(doc(db,'visa_applications',appRef),{
       ref:appRef,
       fullName:name,
+      firstName,
+      lastName,
+      middleName,
       email,
       dob:document.getElementById('dob').value,
       citizenship:document.getElementById('citizenship').value,

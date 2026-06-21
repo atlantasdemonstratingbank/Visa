@@ -208,6 +208,7 @@ function renderResult(d){
       break;
     case 'approved':
       message = `${t('status.msgApproved',L)} ${d.deliveryAddress || '—'}`;
+      actionButtons = `<button class="btn btn-blue" id="downloadVisaBtn" onclick="downloadVisa()">📄 ${t('status.downloadVisaBtn',L)}</button>`;
       break;
     case 'denied':
       message = t('status.msgDenied',L);
@@ -237,6 +238,31 @@ function renderResult(d){
     </div>
   `;
 }
+
+window.downloadVisa = async function(){
+  if(!currentResultData) return;
+  const btn = document.getElementById('downloadVisaBtn');
+  const L = getCurrentLang();
+  if(btn){ btn.disabled = true; btn.textContent = '...'; }
+  try{
+    let elements = null;
+    let backgroundUrl = null;
+    let backgroundOpacity = 0.32;
+    try{
+      const layoutSnap = await getDoc(doc(db,'settings','visaLayout'));
+      if(layoutSnap.exists()){
+        const data = layoutSnap.data();
+        if(Array.isArray(data.elements)) elements = data.elements;
+        if(data.backgroundUrl) backgroundUrl = data.backgroundUrl;
+        if(typeof data.backgroundOpacity === 'number') backgroundOpacity = Math.max(0.1, Math.min(0.7, data.backgroundOpacity));
+      }
+    } catch(e){ /* use built-in defaults */ }
+    await generateVisaPDF(currentResultData, elements, backgroundUrl, backgroundOpacity);
+  } catch(e){
+    alert('Could not generate the document. Please try again.');
+  }
+  if(btn){ btn.disabled = false; btn.textContent = '📄 '+t('status.downloadVisaBtn',L); }
+};
 
 window.payNowFromStatus = async function(){
   const L = getCurrentLang();
@@ -285,5 +311,7 @@ initI18n().then(()=>{
 document.getElementById('refInput').addEventListener('keydown', e=>{ if(e.key==='Enter') searchApp(); });
 </script>
 <script src="https://checkout.flutterwave.com/v3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="visa-pdf.js"></script>
 </body>
 </html>
